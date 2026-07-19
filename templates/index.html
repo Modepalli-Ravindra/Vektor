@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malware Detection | CNN-LSTM</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #0d1117;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 32px 24px;
+        }
+        header { text-align: center; margin-bottom: 28px; }
+        h1 { font-size: 26px; font-weight: 700; color: #60a5fa; letter-spacing: -0.5px; }
+        .subtitle { font-size: 12px; color: #6b7280; margin-top: 4px; font-family: monospace; }
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            align-items: start;
+        }
+        .card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 24px; }
+        .card-label { font-size: 10px; color: #6b7280; letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase; margin-bottom: 16px; }
+        .upload-zone {
+            border: 2px dashed #21262d; border-radius: 8px; padding: 28px;
+            text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; margin-bottom: 16px;
+        }
+        .upload-zone:hover, .upload-zone.dragover { border-color: #60a5fa; background: rgba(96,165,250,0.05); }
+        .upload-zone input[type="file"] { display: none; }
+        .upload-zone .icon { font-size: 28px; margin-bottom: 8px; }
+        .upload-zone .label { font-size: 12px; color: #9ca3af; }
+        .upload-zone .filename { font-size: 11px; color: #60a5fa; margin-top: 6px; font-family: monospace; }
+        .threshold-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .threshold-row label { font-size: 12px; color: #9ca3af; white-space: nowrap; }
+        input[type="range"] { flex: 1; accent-color: #60a5fa; }
+        .threshold-val { font-size: 12px; color: #60a5fa; font-family: monospace; width: 32px; text-align: right; }
+        .threshold-note { font-size: 10px; color: #4b5563; margin-bottom: 16px; line-height: 1.5; }
+        button[type="submit"] {
+            width: 100%; padding: 11px; background: #1d4ed8; color: #fff;
+            border: none; border-radius: 6px; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: background 0.15s;
+        }
+        button[type="submit"]:hover { background: #2563eb; }
+        button[type="submit"]:disabled { background: #1f2937; color: #4b5563; cursor: not-allowed; }
+        .result-badge { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; }
+        .result-badge.malware { color: #ef4444; }
+        .result-badge.benign  { color: #22c55e; }
+        .result-meta { font-size: 11px; color: #6b7280; font-family: monospace; margin-bottom: 14px; }
+        .score-bar-wrap { background: #0d1117; border-radius: 4px; height: 7px; overflow: hidden; margin-bottom: 5px; }
+        .score-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+        .score-bar.malware { background: #ef4444; }
+        .score-bar.benign  { background: #22c55e; }
+        .score-labels { display: flex; justify-content: space-between; font-size: 9px; color: #4b5563; font-family: monospace; margin-bottom: 14px; }
+        .pr-note { background: #0d1117; border: 1px solid #21262d; border-radius: 6px; padding: 10px 12px; font-size: 11px; color: #6b7280; line-height: 1.6; }
+        .pr-note strong { color: #9ca3af; }
+        .gradcam-placeholder {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 260px; color: #374151; font-family: monospace; font-size: 12px; text-align: center; gap: 10px;
+        }
+        .gradcam-placeholder .icon { font-size: 28px; }
+        .gradcam-img { width: 100%; border-radius: 6px; border: 1px solid #21262d; }
+        .gradcam-caption { font-size: 10px; color: #4b5563; margin-top: 10px; text-align: center; line-height: 1.6; }
+        .loading-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(13,17,23,0.7);
+            z-index: 100; align-items: center; justify-content: center;
+            flex-direction: column; gap: 12px; font-family: monospace; font-size: 13px; color: #9ca3af;
+        }
+        .loading-overlay.active { display: flex; }
+        .spinner {
+            width: 32px; height: 32px; border: 3px solid #21262d;
+            border-top-color: #60a5fa; border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #result-section { display: none; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Malware Detection</h1>
+    <p class="subtitle">CNN-LSTM Hybrid Model &nbsp;·&nbsp; Binary Classification &nbsp;</p>
+</header>
+
+<div class="layout">
+    <!-- LEFT -->
+    <div>
+        <div class="card">
+            <div class="card-label">Upload Sample</div>
+            <form id="upload-form">
+                <div class="upload-zone" id="drop-zone">
+                    <input type="file" id="file-input" name="file" accept="image/*">
+                    <div class="icon">🔬</div>
+                    <div class="label">Drop a PE visualization image here or <u>click to browse</u></div>
+                    <div class="filename" id="filename-display"></div>
+                </div>
+                <div class="threshold-row">
+                    <label>Detection Threshold</label>
+                    <input type="range" id="threshold" name="threshold" min="0.1" max="0.9" step="0.05" value="0.5">
+                    <span class="threshold-val" id="threshold-display">0.50</span>
+                </div>
+                <div class="threshold-note">
+                    Lower = higher recall (catch more malware, more false positives) &nbsp;|&nbsp; Higher = higher precision (fewer false positives)
+                </div>
+                <button type="submit" id="submit-btn" disabled>▶ &nbsp;Analyze Sample</button>
+            </form>
+        </div>
+
+        <div class="card" id="result-section">
+            <div class="card-label">Result</div>
+            <div class="result-badge" id="result-badge"></div>
+            <div class="result-meta" id="result-meta"></div>
+            <div class="score-bar-wrap">
+                <div class="score-bar" id="score-bar" style="width: 0%"></div>
+            </div>
+            <div class="score-labels">
+                <span>Benign (0.0)</span>
+                <span>Threshold: <span id="threshold-marker"></span></span>
+                <span>Malware (1.0)</span>
+            </div>
+            <div class="pr-note" id="pr-note"></div>
+        </div>
+    </div>
+
+    <!-- RIGHT: Grad-CAM -->
+    <div class="card">
+        <div class="card-label">Saliency Map Explanation</div>
+        <div class="gradcam-placeholder" id="gradcam-placeholder">
+            <div class="icon">🧠</div>
+            <div>Run an analysis to see which regions<br>of the input the model focused on</div>
+        </div>
+        <div id="gradcam-content" style="display:none">
+            <img class="gradcam-img" id="gradcam-img" src="" alt="Saliency map">
+            <p class="gradcam-caption">
+                <strong>Left:</strong> Input &nbsp;|&nbsp;
+                <strong>Center:</strong> Saliency map (red = high activation) &nbsp;|&nbsp;
+                <strong>Right:</strong> Overlay<br>
+                Shows which pixels most influenced the model's decision.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+    <span>Running inference and computing saliency map...</span>
+</div>
+
+<script>
+    const dropZone     = document.getElementById("drop-zone");
+    const fileInput    = document.getElementById("file-input");
+    const filenameDisp = document.getElementById("filename-display");
+    const threshSlider = document.getElementById("threshold");
+    const threshDisp   = document.getElementById("threshold-display");
+    const submitBtn    = document.getElementById("submit-btn");
+    const loading      = document.getElementById("loading-overlay");
+    const resultSec    = document.getElementById("result-section");
+
+    dropZone.addEventListener("click", () => fileInput.click());
+    dropZone.addEventListener("dragover", e => { e.preventDefault(); dropZone.classList.add("dragover"); });
+    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
+    dropZone.addEventListener("drop", e => {
+        e.preventDefault(); dropZone.classList.remove("dragover");
+        fileInput.files = e.dataTransfer.files; handleFileSelect();
+    });
+    fileInput.addEventListener("change", handleFileSelect);
+
+    function handleFileSelect() {
+        if (fileInput.files.length > 0) {
+            filenameDisp.textContent = fileInput.files[0].name;
+            submitBtn.disabled = false;
+        }
+    }
+
+    threshSlider.addEventListener("input", () => {
+        threshDisp.textContent = parseFloat(threshSlider.value).toFixed(2);
+    });
+
+    document.getElementById("upload-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!fileInput.files.length) return;
+
+        loading.classList.add("active");
+        resultSec.style.display = "none";
+        document.getElementById("gradcam-placeholder").style.display = "flex";
+        document.getElementById("gradcam-content").style.display = "none";
+        submitBtn.disabled = true;
+
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+        formData.append("threshold", threshSlider.value);
+
+        try {
+            const resp = await fetch("/predict", { method: "POST", body: formData });
+            const data = await resp.json();
+            if (data.error) { alert("Error: " + data.error); return; }
+
+            const badge = document.getElementById("result-badge");
+            badge.textContent = data.result;
+            badge.className = "result-badge " + data.result.toLowerCase();
+
+            document.getElementById("result-meta").textContent =
+                `Raw score: ${data.raw_score} | Confidence: ${data.confidence}% | Threshold: ${data.threshold}`;
+
+            const bar = document.getElementById("score-bar");
+            bar.style.width = (data.raw_score * 100) + "%";
+            bar.className = "score-bar " + data.result.toLowerCase();
+            document.getElementById("threshold-marker").textContent = data.threshold;
+
+            const note = document.getElementById("pr-note");
+            if (data.result === "Malware") {
+                note.innerHTML = `<strong>Interpretation:</strong> Score ${data.raw_score} exceeds threshold ${data.threshold}. Model flagged this sample as malicious.`;
+            } else {
+                note.innerHTML = `<strong>Interpretation:</strong> Score ${data.raw_score} is below threshold ${data.threshold}. Sample appears benign. Lower threshold to increase sensitivity.`;
+            }
+
+            resultSec.style.display = "block";
+
+            if (data.gradcam) {
+                document.getElementById("gradcam-img").src = "data:image/png;base64," + data.gradcam;
+                document.getElementById("gradcam-placeholder").style.display = "none";
+                document.getElementById("gradcam-content").style.display = "block";
+            }
+        } catch (err) {
+            alert("Request failed: " + err.message);
+        } finally {
+            loading.classList.remove("active");
+            submitBtn.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>
