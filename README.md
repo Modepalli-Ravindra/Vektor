@@ -138,15 +138,6 @@ Malware-Detection-using-CNN-LSTM/
 
 ---
 
-## Publication
-
-This project led to the following publication:
-
-**Malware Classification using Deep Learning** -- International Research Journal of Engineering and Technology (IRJET), Oct 2024. Extended this binary detection work to multi-class classification of 25 malware families on the Malimg dataset, achieving 98.74% accuracy using MobileNet.
-
----
-
 ## Author
 
-**Dhruv Patel** -- MS Cybersecurity Engineering, USC  
-[LinkedIn](https://linkedin.com/in/dhruvvv55) · [Portfolio](https://dhruv-ashok-patel-portfolio.vercel.app)
+**Dhruv Patel** -- MS Cybersecurity Engineering, USC 
