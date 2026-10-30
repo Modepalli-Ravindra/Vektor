@@ -531,7 +531,7 @@ export default function App() {
               <img
                 src="/hero-bg.png"
                 alt="Vektor Shield Emblem"
-                className="w-[360px] sm:w-[520px] lg:w-[640px] aspect-square object-contain opacity-75 filter drop-shadow-[0_0_65px_rgba(255,46,46,0.8)] select-none transition-all duration-700"
+                className="w-[360px] sm:w-[520px] lg:w-[640px] aspect-square object-contain opacity-45 sm:opacity-50 filter drop-shadow-[0_0_70px_rgba(255,46,46,0.75)] select-none transition-all duration-700"
               />
 
               {/* Ambient Edge Vignette */}
@@ -539,7 +539,7 @@ export default function App() {
             </div>
 
             {/* ──────────────── HERO FOREGROUND CONTENT (z-10 on top of background) ──────────────── */}
-            <div className="relative z-10 space-y-10">
+            <div className="relative z-10 space-y-8">
               {/* Pill Tag with Logo */}
               <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/60 shadow-[0_4px_16px_rgba(0,0,0,0.8)] backdrop-blur-md">
                 <img src="/logo.png" alt="Vektor" className="w-5 h-5 object-contain" />
@@ -553,9 +553,12 @@ export default function App() {
                 Cross-Platform Defense
               </h1>
 
-              <p className="text-base sm:text-lg text-[#B8B1AA] max-w-3xl mx-auto leading-relaxed font-normal drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]">
-                A deep learning detection system that classifies malicious files across Windows executables and Android application packages using spatial convolutional filters and long short-term memory recurrent networks.
-              </p>
+              {/* Enhanced High-Contrast Subtitle Plate */}
+              <div className="max-w-3xl mx-auto px-6 py-4 rounded-2xl bg-[#141010]/80 backdrop-blur-md border border-[#8B1111]/50 shadow-[0_8px_32px_rgba(0,0,0,0.9)]">
+                <p className="text-base sm:text-lg text-white font-normal leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                  A deep learning detection system that classifies malicious files across Windows executables and Android application packages using spatial convolutional filters and long short-term memory recurrent networks.
+                </p>
+              </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-1">
                 <button
