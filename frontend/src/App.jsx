@@ -551,101 +551,112 @@ export default function App() {
       {/* ──────────────── VIEW 1: LANDING PAGE ──────────────── */}
       {currentView === 'landing' && (
         <div className="flex-1 space-y-16 pb-16">
-          {/* Hero Section */}
-          <section id="overview" className="relative isolate max-w-7xl mx-auto px-6 lg:px-10 pt-16 sm:pt-20 pb-16 overflow-hidden rounded-3xl">
-            {/* ──────────────── HERO BACKGROUND: AMBIENT GLOWS & CYBER GRID ──────────────── */}
-            <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none">
-              {/* Cyber Perspective Grid */}
-              <div className="absolute inset-0 cyber-grid [mask-image:radial-gradient(ellipse_80%_65%_at_65%_45%,#000_65%,transparent_100%)] opacity-30" />
+          {/* Hero Section (100% Full Width Edge-to-Edge Background) */}
+          <section id="overview" className="relative isolate w-full min-w-full overflow-hidden border-b border-[#8B1111]/30 pt-10 sm:pt-16 pb-16">
+            {/* ──────────────── 100% FULL-WIDTH HERO BACKGROUND: CYBER TEXTURE, AMBIENT GLOWS & GRID ──────────────── */}
+            <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none w-full h-full">
+              {/* Full-width Cyber Perspective Grid across 100% screen */}
+              <div className="absolute inset-0 cyber-grid [mask-image:radial-gradient(ellipse_100%_80%_at_50%_40%,#000_70%,transparent_100%)] opacity-35 w-full h-full" />
 
-              {/* Deep Red Volumetric Radial Glows concentrated near right side */}
-              <div className="absolute top-1/4 right-1/6 w-[550px] sm:w-[700px] h-[550px] sm:h-[700px] bg-[#8B1111]/30 rounded-full blur-[140px] pointer-events-none" />
-              <div className="absolute top-1/3 right-1/4 w-[320px] sm:w-[450px] h-[320px] sm:h-[450px] bg-[#FF2E2E]/20 rounded-full blur-[90px] pointer-events-none" />
+              {/* Full-bleed Cyber Graphic Texture spanning left and right */}
+              <img
+                src="/hero-cyber-bg.png"
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-screen filter saturate-150 pointer-events-none"
+              />
 
-              {/* Ambient Edge Vignette */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/40 via-transparent to-[#090909]" />
+              {/* Deep Red Volumetric Atmospheric Glows covering left, center & right */}
+              <div className="absolute -top-24 left-1/10 w-[600px] sm:w-[900px] h-[500px] sm:h-[700px] bg-[#8B1111]/30 rounded-full blur-[160px] pointer-events-none" />
+              <div className="absolute top-10 right-1/10 w-[450px] sm:w-[650px] h-[450px] sm:h-[650px] bg-[#FF2E2E]/20 rounded-full blur-[130px] pointer-events-none" />
+              <div className="absolute -bottom-20 left-1/3 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-[#8B1111]/25 rounded-full blur-[140px] pointer-events-none" />
+
+              {/* Seamless Edge Vignette to blend into pure #090909 */}
+              <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/70 via-transparent to-[#090909]" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#090909]/60 via-transparent to-[#090909]/60" />
             </div>
 
-            {/* ──────────────── 2-COLUMN SPLIT: LEFT = TEXT & CTAs, RIGHT = ANIMATED LOGO ──────────────── */}
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-              
-              {/* LEFT COLUMN: Text, Heading & CTA Buttons */}
-              <div className="lg:col-span-7 text-left space-y-6 sm:space-y-7">
-                {/* Pill Tag with Logo */}
-                <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/60 shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-                  <img src="/logo.png" alt="Vektor" className="w-5 h-5 object-contain" />
-                  <span className="text-xs font-mono font-medium tracking-wider text-[#FF2E2E] uppercase">
-                    Cross-Platform Threat Defense
-                  </span>
-                </div>
-
-                {/* H1 Heading */}
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12] drop-shadow-[0_6px_24px_rgba(0,0,0,0.95)]">
-                  Vektor Threat Intelligence <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFFFFF] to-[#FF2E2E]">
-                    Cross-Platform Defense
-                  </span>
-                </h1>
-
-                {/* Description */}
-                <p className="text-base sm:text-lg text-[#B8B1AA] max-w-2xl leading-relaxed font-normal">
-                  A deep learning detection system that classifies malicious files across Windows executables and Android application packages using spatial convolutional filters and long short-term memory recurrent networks.
-                </p>
-
-                {/* CTA Buttons & Feature Badges */}
-                <div className="space-y-4 pt-1">
-                  <div className="flex flex-wrap items-center gap-4">
-                    <button
-                      onClick={() => openAuthWithMode('login')}
-                      className="clay-btn-primary text-sm py-3 px-8 justify-center shadow-[0_6px_20px_rgba(255,46,46,0.35)]"
-                    >
-                      <span>Sign In to Scanner</span>
-                      <ArrowRightIcon className="w-4 h-4" />
-                    </button>
-
-                    <a href="#architecture" className="clay-btn-secondary text-sm py-3 px-7 justify-center shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-                      <CpuChipIcon className="w-4 h-4 text-[#FF2E2E]" />
-                      <span>Explore Capabilities</span>
-                    </a>
-                  </div>
-
-                  {/* Feature Badges below CTAs */}
-                  <div className="flex flex-wrap items-center gap-3 pt-2 text-xs font-mono text-[#B8B1AA]">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full clay-inset border border-[#8B1111]/40">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF2E2E] animate-pulse" />
-                      Windows PE (244 Features)
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full clay-inset border border-[#8B1111]/40">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF2E2E] animate-pulse" />
-                      Android APK (487 Features)
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full clay-inset border border-[#8B1111]/40">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                      Zero Heuristics
+            {/* ──────────────── HERO CONTENT CONTAINER (W-FULL MAX-W-[1700PX]) ──────────────── */}
+            <div className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10 space-y-16">
+              {/* 2-COLUMN SPLIT: LEFT = TEXT & CTAs, RIGHT = EMBLEM */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                
+                {/* LEFT COLUMN: Text, Heading & CTA Buttons */}
+                <div className="lg:col-span-7 text-left space-y-6 sm:space-y-7">
+                  {/* Pill Tag with Logo */}
+                  <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/60 shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+                    <img src="/logo.png" alt="Vektor" className="w-5 h-5 object-contain" />
+                    <span className="text-xs font-mono font-medium tracking-wider text-[#FF2E2E] uppercase">
+                      Cross-Platform Threat Defense
                     </span>
                   </div>
+
+                  {/* H1 Heading */}
+                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12] drop-shadow-[0_6px_24px_rgba(0,0,0,0.95)]">
+                    Vektor Threat Intelligence <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFFFFF] to-[#FF2E2E]">
+                      Cross-Platform Defense
+                    </span>
+                  </h1>
+
+                  {/* Description */}
+                  <p className="text-base sm:text-lg text-[#B8B1AA] max-w-2xl leading-relaxed font-normal">
+                    A deep learning detection system that classifies malicious files across Windows executables and Android application packages using spatial convolutional filters and long short-term memory recurrent networks.
+                  </p>
+
+                  {/* CTA Buttons & Feature Badges */}
+                  <div className="space-y-4 pt-1">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <button
+                        onClick={() => openAuthWithMode('login')}
+                        className="clay-btn-primary text-sm py-3 px-8 justify-center shadow-[0_6px_20px_rgba(255,46,46,0.35)]"
+                      >
+                        <span>Sign In to Scanner</span>
+                        <ArrowRightIcon className="w-4 h-4" />
+                      </button>
+
+                      <a href="#architecture" className="clay-btn-secondary text-sm py-3 px-7 justify-center shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+                        <CpuChipIcon className="w-4 h-4 text-[#FF2E2E]" />
+                        <span>Explore Capabilities</span>
+                      </a>
+                    </div>
+
+                    {/* Feature Badges below CTAs */}
+                    <div className="flex flex-wrap items-center gap-3 pt-2 text-xs font-mono text-[#B8B1AA]">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full clay-inset border border-[#8B1111]/40">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF2E2E] animate-pulse" />
+                        Windows PE (244 Features)
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full clay-inset border border-[#8B1111]/40">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF2E2E] animate-pulse" />
+                        Android APK (487 Features)
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full clay-inset border border-[#8B1111]/40">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        Zero Heuristics
+                      </span>
+                    </div>
+                  </div>
                 </div>
+
+                {/* RIGHT COLUMN: Clean, Grounded Enterprise Vektor Shield Emblem */}
+                <div className="lg:col-span-5 flex items-center justify-center relative">
+                  <div className="relative w-[280px] sm:w-[360px] aspect-square flex items-center justify-center">
+                    {/* Subtle ambient red atmospheric glow */}
+                    <div className="absolute inset-4 rounded-full bg-[#8B1111]/30 blur-3xl pointer-events-none" />
+
+                    {/* High-Res Transparent Vektor Shield Emblem */}
+                    <img
+                      src="/hero-bg.png"
+                      alt="Vektor Shield Emblem"
+                      className="relative z-10 w-[260px] sm:w-[320px] aspect-square object-contain filter drop-shadow-[0_16px_40px_rgba(255,46,46,0.5)] select-none"
+                    />
+                  </div>
+                </div>
+
               </div>
 
-              {/* RIGHT COLUMN: Clean, Grounded Enterprise Vektor Shield Emblem */}
-              <div className="lg:col-span-5 flex items-center justify-center relative">
-                <div className="relative w-[280px] sm:w-[360px] aspect-square flex items-center justify-center">
-                  {/* Subtle ambient red atmospheric glow */}
-                  <div className="absolute inset-4 rounded-full bg-[#8B1111]/30 blur-3xl pointer-events-none" />
-
-                  {/* High-Res Transparent Vektor Shield Emblem */}
-                  <img
-                    src="/hero-bg.png"
-                    alt="Vektor Shield Emblem"
-                    className="relative z-10 w-[260px] sm:w-[320px] aspect-square object-contain filter drop-shadow-[0_16px_40px_rgba(255,46,46,0.5)] select-none"
-                  />
-                </div>
-              </div>
-
-            </div>
-
-            {/* 4 Core Platform Pillars */}
-            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-16">
+              {/* 4 Core Platform Pillars */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
               <div className="clay-card p-6 text-left space-y-2">
                 <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Multi-Platform</span>
                 <span className="text-xl sm:text-2xl font-bold text-white block">Dual Engine</span>
@@ -667,12 +678,13 @@ export default function App() {
                 <span className="text-xs text-[#B8B1AA]/80 block">Transparent Byte Visual Maps</span>
               </div>
             </div>
+            </div>
           </section>
 
           
 
           {/* Architecture Capabilities */}
-          <section id="architecture" className="max-w-7xl mx-auto px-6 lg:px-10 space-y-10">
+          <section id="architecture" className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-12 space-y-10">
             <div className="text-center max-w-3xl mx-auto space-y-3.5 pb-2">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/50">
                 <span className="text-xs font-mono uppercase tracking-wider text-[#FF2E2E] font-semibold">
@@ -724,7 +736,7 @@ export default function App() {
           </section>
 
           {/* Workflow */}
-          <section id="workflow" className="max-w-7xl mx-auto px-6 lg:px-10 space-y-10">
+          <section id="workflow" className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-12 space-y-10">
             <div className="text-center max-w-3xl mx-auto space-y-3.5 pb-2">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/50">
                 <span className="text-xs font-mono uppercase tracking-wider text-[#FF2E2E] font-semibold">
@@ -778,7 +790,7 @@ export default function App() {
           </section>
 
           {/* Bottom Action Card */}
-          <section className="max-w-7xl mx-auto px-6 lg:px-10">
+          <section className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-12">
             <div className="clay-card p-10 flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="space-y-1">
                 <h3 className="text-xl font-bold text-white">Ready to test a sample?</h3>
