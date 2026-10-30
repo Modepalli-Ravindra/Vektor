@@ -802,36 +802,22 @@ export default function App() {
       {currentView === 'dashboard' && (
         <main className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-10 py-5 space-y-5 flex-1">
           {/* Top Bar with Dynamic Title & Status */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#8B1111]/30">
-            <div>
-              <div className="flex items-center gap-3">
-                <VektorLogo className="w-8 h-8" />
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  {dashboardTab === 'scanner' && 'Vektor Scanner'}
-                  {dashboardTab === 'history' && 'Audit History Log'}
-                  {dashboardTab === 'analytics' && 'Security Telemetry & System Analytics'}
-                  {dashboardTab === 'models' && 'Deep Learning Architecture & Benchmarks'}
-                </h1>
-                {dashboardTab !== 'scanner' && (
-                  <span className="clay-pill text-xs font-mono px-3 py-1 text-[#FF2E2E]">
-                    {dashboardTab === 'history' && `${history.length} SQLite Records`}
-                    {dashboardTab === 'analytics' && 'Active Metrics'}
-                    {dashboardTab === 'models' && 'Held-Out Validation'}
-                  </span>
-                )}
-              </div>
-            </div>
-
+          <div className="flex items-center justify-between pb-3 border-b border-[#8B1111]/30">
             <div className="flex items-center gap-3">
-              {/* In Dashboard: ONLY Sign Out button! No Landing Page, No Home, No Dashboard button */}
-              <button
-                onClick={handleLogout}
-                className="clay-btn-secondary text-xs py-2 px-4 text-rose-300 hover:text-white hover:border-[#FF2E2E] gap-2 shadow-[0_4px_16px_rgba(0,0,0,0.8)]"
-                title="Sign Out of Vektor"
-              >
-                <ArrowRightOnRectangleIcon className="w-4 h-4 text-[#FF2E2E]" />
-                <span>Sign Out</span>
-              </button>
+              <VektorLogo className="w-8 h-8" />
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                {dashboardTab === 'scanner' && 'Vektor Scanner'}
+                {dashboardTab === 'history' && 'Audit History Log'}
+                {dashboardTab === 'analytics' && 'Security Telemetry & System Analytics'}
+                {dashboardTab === 'models' && 'Deep Learning Architecture & Benchmarks'}
+              </h1>
+              {dashboardTab !== 'scanner' && (
+                <span className="clay-pill text-xs font-mono px-3 py-1 text-[#FF2E2E]">
+                  {dashboardTab === 'history' && `${history.length} SQLite Records`}
+                  {dashboardTab === 'analytics' && 'Active Metrics'}
+                  {dashboardTab === 'models' && 'Held-Out Validation'}
+                </span>
+              )}
             </div>
           </div>
 
