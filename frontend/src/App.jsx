@@ -69,7 +69,6 @@ export default function App() {
     threat_rate_percent: 0,
     average_confidence: 0,
   });
-  const [testSamples, setTestSamples] = useState([]);
   const [history, setHistory] = useState([]);
 
   // Scanner State
@@ -103,11 +102,10 @@ export default function App() {
   // Fetch telemetry
   const fetchHealthAndStats = async () => {
     try {
-      const [hRes, sRes, histRes, samplesRes] = await Promise.all([
+      const [hRes, sRes, histRes] = await Promise.all([
         fetch(`${API_BASE}/api/health`).catch(() => null),
         fetch(`${API_BASE}/api/stats`).catch(() => null),
         fetch(`${API_BASE}/api/history`).catch(() => null),
-        fetch(`${API_BASE}/api/test-samples`).catch(() => null),
       ]);
 
       if (hRes && hRes.ok) setHealth(await hRes.json());
@@ -115,7 +113,6 @@ export default function App() {
 
       if (sRes && sRes.ok) setStats(await sRes.json());
       if (histRes && histRes.ok) setHistory(await histRes.json());
-      if (samplesRes && samplesRes.ok) setTestSamples(await samplesRes.json());
     } catch {
       setHealth({ status: 'offline', windows_stadyn_model: false, android_kronodroid_model: false });
     }
@@ -390,31 +387,6 @@ export default function App() {
     }
   };
 
-  // 1-Click Evaluation of Test Samples
-  const handleRunTestSample = async (sampleId) => {
-    setScanning(true);
-    setScanError(null);
-    setScanResult(null);
-
-    try {
-      const res = await fetch(`${API_BASE}/api/scan/test-sample/${sampleId}?threshold=${threshold}`, {
-        method: 'POST',
-      });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({ detail: 'Sample evaluation failed' }));
-        throw new Error(errData.detail || 'Sample processing error');
-      }
-
-      const result = await res.json();
-      setScanResult(result);
-      fetchHealthAndStats();
-    } catch (err) {
-      setScanError(err.message || 'Unable to process sample.');
-    } finally {
-      setScanning(false);
-    }
-  };
 
   const handleClearHistory = async () => {
     if (!window.confirm('Delete all records from the scan history?')) return;
