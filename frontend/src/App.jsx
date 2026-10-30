@@ -448,7 +448,11 @@ export default function App() {
         <div className="w-[95%] max-w-7xl border border-[#FF2E2E] rounded-full bg-[#141010] shadow-[0_12px_30px_#000000,inset_1px_1px_1.5px_rgba(255,255,255,0.12),inset_-2px_-2px_4px_rgba(0,0,0,0.7)] px-5 sm:px-7 h-14 sm:h-16 flex items-center justify-between transition-all">
           {/* Brand */}
           <div
-            onClick={() => setCurrentView('landing')}
+            onClick={() => {
+              if (currentView === 'landing') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
             className="flex items-center gap-2.5 cursor-pointer select-none"
           >
             <VektorLogo className="w-8 h-8" />
@@ -469,34 +473,24 @@ export default function App() {
               <a href="#workflow" className="hover:text-white transition-colors">Process</a>
             </nav>
           ) : (
-            <div className="flex items-center gap-2">
-              <span className="clay-pill px-3 py-1 text-xs font-mono text-[#B8B1AA]">
-                Dashboard Mode
-              </span>
-            </div>
+            <div className="hidden sm:flex items-center gap-2" />
           )}
 
           {/* Right Controls */}
           <div className="flex items-center gap-3">
-            {currentView === 'dashboard' && user ? (
+            {currentView === 'dashboard' ? (
               <div className="flex items-center gap-2.5">
-                <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full clay-inset border border-[#8B1111]/30">
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full clay-inset border border-[#8B1111]/30">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-xs font-mono text-white font-medium truncate max-w-[140px]">
-                    {user.name || user.email}
+                  <span className="text-xs font-mono text-white font-medium truncate max-w-[150px]">
+                    {user?.name || user?.email}
                   </span>
                 </div>
 
-                <button
-                  onClick={() => setCurrentView('landing')}
-                  className="clay-btn-secondary text-xs py-1.5 px-3"
-                >
-                  <span>Home</span>
-                </button>
-
+                {/* Dashboard Mode: ONLY Sign Out button! No Dashboard, No Home, No Landing Page button */}
                 <button
                   onClick={handleLogout}
-                  className="clay-btn-secondary text-xs py-1.5 px-3 text-rose-300 hover:text-white hover:border-[#FF2E2E] gap-1.5"
+                  className="clay-btn-secondary text-xs py-1.5 px-3.5 text-rose-300 hover:text-white hover:border-[#FF2E2E] gap-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.8)]"
                   title="Sign Out of Application"
                 >
                   <ArrowRightOnRectangleIcon className="w-3.5 h-3.5 text-[#FF2E2E]" />
@@ -504,34 +498,22 @@ export default function App() {
                 </button>
               </div>
             ) : (
-              /* ON LANDING PAGE: NEVER SHOW SIGN OUT! */
+              /* ON LANDING PAGE: NEVER SHOW DASHBOARD BUTTON OR SIGN OUT BUTTON! ONLY Sign In and Sign Up */
               <div className="flex items-center gap-2.5">
-                {user ? (
-                  <button
-                    onClick={() => setCurrentView('dashboard')}
-                    className="clay-btn-primary text-xs py-1.5 px-4"
-                  >
-                    <span>Dashboard</span>
-                    <ArrowRightIcon className="w-3.5 h-3.5" />
-                  </button>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => openAuthWithMode('login')}
-                      className="clay-btn-secondary text-xs py-1.5 px-3.5"
-                    >
-                      <LockClosedIcon className="w-3.5 h-3.5 text-[#FF2E2E]" />
-                      <span>Sign In</span>
-                    </button>
-                    <button
-                      onClick={() => openAuthWithMode('signup')}
-                      className="clay-btn-primary text-xs py-1.5 px-3.5"
-                    >
-                      <UserPlusIcon className="w-3.5 h-3.5" />
-                      <span>Sign Up</span>
-                    </button>
-                  </>
-                )}
+                <button
+                  onClick={() => openAuthWithMode('login')}
+                  className="clay-btn-secondary text-xs py-1.5 px-3.5 shadow-[0_4px_16px_rgba(0,0,0,0.8)]"
+                >
+                  <LockClosedIcon className="w-3.5 h-3.5 text-[#FF2E2E]" />
+                  <span>Sign In</span>
+                </button>
+                <button
+                  onClick={() => openAuthWithMode('signup')}
+                  className="clay-btn-primary text-xs py-1.5 px-3.5 shadow-[0_4px_16px_rgba(255,46,46,0.35)]"
+                >
+                  <UserPlusIcon className="w-3.5 h-3.5" />
+                  <span>Sign Up</span>
+                </button>
               </div>
             )}
           </div>
@@ -586,13 +568,10 @@ export default function App() {
                 <div className="space-y-4 pt-1">
                   <div className="flex flex-wrap items-center gap-4">
                     <button
-                      onClick={() => {
-                        if (user) setCurrentView('dashboard');
-                        else openAuthWithMode('login');
-                      }}
+                      onClick={() => openAuthWithMode('login')}
                       className="clay-btn-primary text-sm py-3 px-8 justify-center shadow-[0_6px_20px_rgba(255,46,46,0.35)]"
                     >
-                      <span>{user ? 'Open Scanner' : 'Get Started'}</span>
+                      <span>Sign In to Scanner</span>
                       <ArrowRightIcon className="w-4 h-4" />
                     </button>
 
@@ -934,14 +913,11 @@ export default function App() {
                 </p>
               </div>
               <button
-                onClick={() => {
-                  if (user) setCurrentView('dashboard');
-                  else openAuthWithMode('login');
-                }}
-                className="clay-btn-primary py-3 px-6 text-xs whitespace-nowrap"
+                onClick={() => openAuthWithMode('login')}
+                className="clay-btn-primary py-3 px-6 text-xs whitespace-nowrap shadow-[0_6px_20px_rgba(255,46,46,0.35)]"
               >
                 <LockClosedIcon className="w-4 h-4" />
-                <span>{user ? 'Open Scanner' : 'Sign In to Scanner'}</span>
+                <span>Sign In to Scanner</span>
               </button>
             </div>
           </section>
@@ -972,15 +948,10 @@ export default function App() {
             </div>
 
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => setCurrentView('landing')}
-                className="clay-btn-secondary text-xs py-2 px-4"
-              >
-                <span>Landing Page</span>
-              </button>
+              {/* In Dashboard: ONLY Sign Out button! No Landing Page, No Home, No Dashboard button */}
               <button
                 onClick={handleLogout}
-                className="clay-btn-secondary text-xs py-2 px-4 text-rose-300 hover:text-white hover:border-[#FF2E2E] gap-1.5"
+                className="clay-btn-secondary text-xs py-2 px-4 text-rose-300 hover:text-white hover:border-[#FF2E2E] gap-2 shadow-[0_4px_16px_rgba(0,0,0,0.8)]"
                 title="Sign Out of Vektor"
               >
                 <ArrowRightOnRectangleIcon className="w-4 h-4 text-[#FF2E2E]" />
