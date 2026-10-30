@@ -267,16 +267,55 @@ npm run dev
 
 ---
 
-## Authentication & Usage
+## Troubleshooting & Common Setup Errors
 
-1. Open `http://127.0.0.1:5173` in your browser.
-2. Click **Sign Up** to create an analyst account (enter Full Name, Email, and Password compliant with security requirements).
-3. Once authenticated, access the multi-page dashboard:
-   - **Scanner**: Switch between **Windows PE**, **Android APK**, or **Visual Byte Matrix**. Adjust the sensitivity threshold and drop a binary to inspect forensic classifications.
-   - **Scan History**: Review and search the persistent SQLite detection audit log.
-   - **Analytics**: Inspect real-time threat rates, intercepted telemetry, and database statuses.
-   - **Model Specs**: Review neural layer architectures and held-out test confusion matrices.
-4. Click **Sign Out** to securely exit the console and return to the landing page.
+If you encounter an issue when setting up Vektor on a new computer, use the instant fixes below:
+
+### 1. PowerShell Script Execution Disabled
+- **Error:** `venv\Scripts\activate : File ...\activate.ps1 cannot be loaded because running scripts is disabled on this system.`
+- **Cause:** Windows PowerShell restricts script execution by default.
+- **Fix:** Open PowerShell and run this one-time command:
+  ```powershell
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+  ```
+  *Alternatively, use Windows Command Prompt (`cmd`) and run:* `venv\Scripts\activate.bat`
+
+### 2. `'python'` or `'pip'` Not Recognized
+- **Error:** `'python' is not recognized as an internal or external command...`
+- **Cause:** Python was installed without enabling the PATH environment variable.
+- **Fix:** 
+  1. Open Windows "Add or Remove Programs" ➔ Find **Python** ➔ Click **Modify**.
+  2. Check the box **"Add Python to environment variables"** and complete setup.
+  3. Close and reopen your terminal.
+
+### 3. `'node'` or `'npm'` Not Recognized
+- **Error:** `'node' is not recognized as an internal or external command...`
+- **Cause:** Node.js is not installed or terminal hasn't refreshed.
+- **Fix:** Download and install Node.js LTS from [nodejs.org](https://nodejs.org/), then restart your terminal.
+
+### 4. Port 8000 or Port 5173 Already in Use
+- **Error:** `[WinError 10048] Only one usage of each socket address is normally permitted`
+- **Cause:** Another background instance of Uvicorn or another app is holding port 8000.
+- **Fix:** Stop the existing process holding the port:
+  ```powershell
+  # Windows PowerShell:
+  Get-Process -Id (Get-NetTCPConnection -LocalPort 8000).OwningProcess | Stop-Process -Force
+  ```
+
+### 5. Frontend Shows "Unable to connect to the backend server"
+- **Cause:** The backend server is not running or still initializing.
+- **Fix:** Keep the **Backend terminal window open and running** (`run_backend.bat`). Wait until you see `Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)` before performing scans.
+
+### 6. TensorFlow GPU Notice on Windows
+- **Notice:** `WARNING:tensorflow:TensorFlow GPU support is not available on native Windows for TensorFlow >= 2.11`
+- **Resolution:** This is a benign informational warning from Google TensorFlow, not an error. The Vektor neural architectures (9,601 weights) are optimized for ultra-fast sub-30ms CPU inference. You can safely ignore this notice.
+
+### 7. Need Safe Test Samples for Evaluation
+- **Resolution:** If the new computer does not have sample `.exe` or `.apk` files, run:
+  ```bash
+  python create_sample_files.py
+  ```
+  This creates 5 safe evaluation binaries in `Sample_Test_Files/` ready for upload.
 
 ---
 
