@@ -86,18 +86,24 @@ Evaluated rigorously on completely held-out test splits.
 - **Model Architecture Sub-Page (`Model Specs`)**:
   - Side-by-side held-out validation cards for Windows PE and Android KronoDroid benchmarks with full confusion matrices and 4-stage neural execution breakdown.
 
-### 2. Explainable AI (XAI) with Grad-CAM
-- Gradient-weighted Class Activation Mapping (Grad-CAM) computes saliency gradients on PE byte matrices, highlighting the precise structural clusters that influenced the model's classification.
+### 2. Explainable AI (XAI) with SHAP & Grad-CAM
+- **SHAP (SHapley Additive exPlanations)**: Calculates game-theoretic feature attribution across Windows PE (244 tabular attributes: PE headers, sections, Cuckoo native API calls) and Android APK (487 tabular attributes: dangerous permissions, KronoDroid dynamic system calls). Returns net marginal impact scores, directional attribution badges (`Benign Factor (-)` vs `Malware Factor (+)`), and plain-English forensic domain reasons.
+- **Zero-Scroll Sub-Tab Toggle**: Result cards feature an instant inline toggle between **Forensic Overview** (metadata, checksum, Conv1D/LSTM assessment) and **SHAP Explainability** (feature attribution rankings with compact scroll), ensuring zero page scrollbar and perfectly balanced card heights.
+- **Grad-CAM Saliency Maps**: Gradient-weighted Class Activation Mapping computes heatmaps on PE byte matrices, highlighting the precise structural byte clusters that influenced the model's classification.
 
-### 3. Strict Authentication & Role Guarding
+### 3. Cyber Scanning Loader with Blur Backdrop
+- During inference execution, the application renders a fullscreen `backdrop-blur-md bg-black/75` focus overlay.
+- Features animated rotating cyber radar rings, volumetric pulsing glows, floating brand emblem, and a 5-stage live pipeline execution tracker with dynamic gradient progress bars.
+
+### 4. Strict Authentication & Role Guarding
 - Secure SQLite user management with cryptographic password hashing.
 - Full name registration, password security criteria validation (minimum length, lowercase, uppercase, numbers, symbols), and interactive password visibility toggles (`EyeIcon`).
 - Complete session isolation: Dashboard features only a **Sign Out** button that clears local session state and redirects to the landing page with zero back-channel leaks.
 
-### 4. Claymorphic Design Language
+### 5. Ultra-Wide Claymorphic Design Language
 - Ultra-sleek cybersecurity UI engineered with Tailwind CSS and custom claymorphic elevation.
 - Built on the Dopely Signal Red palette (`#FF2E2E`, `#8B1111`, `#090909`, `#141010`, `#FFFFFF`, `#B8B1AA`).
-- Wide 1700px layout eliminating empty lateral gutters and optimizing multi-monitor analyst workflows.
+- Ultra-wide 1850px layout with prominent active red borders on selected navbar pages and generous vertical breathing room.
 
 ---
 
