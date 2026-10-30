@@ -508,98 +508,149 @@ export default function App() {
       {currentView === 'landing' && (
         <div className="flex-1 space-y-28 pb-28">
           {/* Hero Section */}
-          <section id="overview" className="relative isolate max-w-7xl mx-auto px-6 lg:px-10 pt-24 sm:pt-28 pb-14 text-center overflow-hidden rounded-3xl">
-            {/* ──────────────── HERO BACKGROUND: TRANSPARENT SHIELD & 3D CYBER MESH ──────────────── */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden select-none">
+          <section id="overview" className="relative isolate max-w-7xl mx-auto px-6 lg:px-10 pt-16 sm:pt-20 pb-16 overflow-hidden rounded-3xl">
+            {/* ──────────────── HERO BACKGROUND: AMBIENT GLOWS & CYBER GRID ──────────────── */}
+            <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none">
               {/* Cyber Perspective Grid */}
-              <div className="absolute inset-0 cyber-grid [mask-image:radial-gradient(ellipse_75%_65%_at_50%_45%,#000_70%,transparent_100%)] opacity-35" />
+              <div className="absolute inset-0 cyber-grid [mask-image:radial-gradient(ellipse_80%_65%_at_65%_45%,#000_65%,transparent_100%)] opacity-30" />
 
-              {/* Deep Red Volumetric Radial Glows */}
-              <div className="absolute w-[600px] sm:w-[850px] h-[600px] sm:h-[850px] bg-[#8B1111]/35 rounded-full blur-[140px] pointer-events-none" />
-              <div className="absolute w-[350px] sm:w-[520px] h-[350px] sm:h-[520px] bg-[#FF2E2E]/25 rounded-full blur-[90px] pointer-events-none" />
-
-              {/* Concentric Radar Scan Circles Behind the Text */}
-              <div className="absolute w-[460px] sm:w-[660px] lg:w-[780px] aspect-square rounded-full border border-[#FF2E2E]/30 animate-spin-slow pointer-events-none flex items-center justify-center">
-                <div className="absolute top-0 w-3 h-3 rounded-full bg-[#FF2E2E] shadow-[0_0_12px_#FF2E2E]" />
-                <div className="absolute bottom-0 w-3 h-3 rounded-full bg-[#8B1111]" />
-                <div className="absolute left-0 w-3 h-3 rounded-full bg-[#8B1111]" />
-                <div className="absolute right-0 w-3 h-3 rounded-full bg-[#FF2E2E] shadow-[0_0_12px_#FF2E2E]" />
-              </div>
-              <div className="absolute w-[340px] sm:w-[500px] lg:w-[600px] aspect-square rounded-full border border-dashed border-[#8B1111]/50 animate-spin-reverse pointer-events-none" />
-
-              {/* High-Res Transparent Vektor Shield Emblem (Background Cleanly Removed) */}
-              <img
-                src="/hero-bg.png"
-                alt="Vektor Shield Emblem"
-                className="w-[360px] sm:w-[520px] lg:w-[640px] aspect-square object-contain opacity-45 sm:opacity-50 filter drop-shadow-[0_0_70px_rgba(255,46,46,0.75)] select-none transition-all duration-700"
-              />
+              {/* Deep Red Volumetric Radial Glows concentrated near right side */}
+              <div className="absolute top-1/4 right-1/6 w-[550px] sm:w-[700px] h-[550px] sm:h-[700px] bg-[#8B1111]/30 rounded-full blur-[140px] pointer-events-none" />
+              <div className="absolute top-1/3 right-1/4 w-[320px] sm:w-[450px] h-[320px] sm:h-[450px] bg-[#FF2E2E]/20 rounded-full blur-[90px] pointer-events-none" />
 
               {/* Ambient Edge Vignette */}
               <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/40 via-transparent to-[#090909]" />
             </div>
 
-            {/* ──────────────── HERO FOREGROUND CONTENT (z-10 on top of background) ──────────────── */}
-            <div className="relative z-10 space-y-8">
-              {/* Pill Tag with Logo */}
-              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/60 shadow-[0_4px_16px_rgba(0,0,0,0.8)] backdrop-blur-md">
-                <img src="/logo.png" alt="Vektor" className="w-5 h-5 object-contain" />
-                <span className="text-xs font-mono font-medium tracking-wider text-[#FF2E2E] uppercase">
-                  Cross-Platform Threat Defense
-                </span>
-              </div>
+            {/* ──────────────── 2-COLUMN SPLIT: LEFT = TEXT & CTAs, RIGHT = ANIMATED LOGO ──────────────── */}
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+              
+              {/* LEFT COLUMN: Text, Heading & CTA Buttons */}
+              <div className="lg:col-span-7 text-left space-y-6 sm:space-y-7">
+                {/* Pill Tag with Logo */}
+                <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/60 shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+                  <img src="/logo.png" alt="Vektor" className="w-5 h-5 object-contain" />
+                  <span className="text-xs font-mono font-medium tracking-wider text-[#FF2E2E] uppercase">
+                    Cross-Platform Threat Defense
+                  </span>
+                </div>
 
-              <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-[1.16] drop-shadow-[0_6px_24px_rgba(0,0,0,0.95)]">
-                Vektor Threat Intelligence <br className="hidden sm:block" />
-                Cross-Platform Defense
-              </h1>
+                {/* H1 Heading */}
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12] drop-shadow-[0_6px_24px_rgba(0,0,0,0.95)]">
+                  Vektor Threat Intelligence <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFFFFF] to-[#FF2E2E]">
+                    Cross-Platform Defense
+                  </span>
+                </h1>
 
-              {/* Enhanced High-Contrast Subtitle Plate */}
-              <div className="max-w-3xl mx-auto px-6 py-4 rounded-2xl bg-[#141010]/80 backdrop-blur-md border border-[#8B1111]/50 shadow-[0_8px_32px_rgba(0,0,0,0.9)]">
-                <p className="text-base sm:text-lg text-white font-normal leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                {/* Description */}
+                <p className="text-base sm:text-lg text-[#B8B1AA] max-w-2xl leading-relaxed font-normal">
                   A deep learning detection system that classifies malicious files across Windows executables and Android application packages using spatial convolutional filters and long short-term memory recurrent networks.
                 </p>
+
+                {/* CTA Buttons & Feature Badges */}
+                <div className="space-y-4 pt-1">
+                  <div className="flex flex-wrap items-center gap-4">
+                    <button
+                      onClick={() => {
+                        if (user) setCurrentView('dashboard');
+                        else openAuthWithMode('login');
+                      }}
+                      className="clay-btn-primary text-sm py-3 px-8 justify-center shadow-[0_6px_20px_rgba(255,46,46,0.35)]"
+                    >
+                      <span>{user ? 'Open Scanner' : 'Get Started'}</span>
+                      <ArrowRightIcon className="w-4 h-4" />
+                    </button>
+
+                    <a href="#benchmarks" className="clay-btn-secondary text-sm py-3 px-7 justify-center shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+                      <ChartBarIcon className="w-4 h-4 text-[#FF2E2E]" />
+                      <span>View Results</span>
+                    </a>
+                  </div>
+
+                  {/* Feature Badges below CTAs */}
+                  <div className="flex flex-wrap items-center gap-3 pt-2 text-xs font-mono text-[#B8B1AA]">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full clay-inset border border-[#8B1111]/40">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF2E2E] animate-pulse" />
+                      Windows PE (244 Features)
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full clay-inset border border-[#8B1111]/40">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF2E2E] animate-pulse" />
+                      Android APK (487 Features)
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full clay-inset border border-[#8B1111]/40">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      Zero Heuristics
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-1">
-                <button
-                  onClick={() => {
-                    if (user) setCurrentView('dashboard');
-                    else openAuthWithMode('login');
-                  }}
-                  className="clay-btn-primary text-sm py-3 px-8 w-full sm:w-auto justify-center shadow-[0_6px_20px_rgba(255,46,46,0.35)]"
-                >
-                  <span>{user ? 'Open Scanner' : 'Get Started'}</span>
-                  <ArrowRightIcon className="w-4 h-4" />
-                </button>
+              {/* RIGHT COLUMN: 3D Animated Logo Stage */}
+              <div className="lg:col-span-5 flex items-center justify-center relative">
+                <div className="relative w-[320px] sm:w-[420px] lg:w-[450px] aspect-square flex items-center justify-center">
+                  
+                  {/* Concentric Radar Scan Circle Outer with Blips */}
+                  <div className="absolute inset-0 rounded-full border border-[#FF2E2E]/25 animate-spin-slow flex items-center justify-center pointer-events-none">
+                    <div className="absolute top-0 w-3 h-3 rounded-full bg-[#FF2E2E] shadow-[0_0_14px_#FF2E2E]" />
+                    <div className="absolute bottom-0 w-3 h-3 rounded-full bg-[#8B1111]" />
+                    <div className="absolute left-0 w-3 h-3 rounded-full bg-[#8B1111]" />
+                    <div className="absolute right-0 w-3 h-3 rounded-full bg-[#FF2E2E] shadow-[0_0_14px_#FF2E2E]" />
+                  </div>
 
-                <a href="#benchmarks" className="clay-btn-secondary text-sm py-3 px-8 w-full sm:w-auto justify-center shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-                  <ChartBarIcon className="w-4 h-4 text-[#FF2E2E]" />
-                  <span>View Results</span>
-                </a>
+                  {/* Inner Dashed Reverse Rotating Ring */}
+                  <div className="absolute inset-8 sm:inset-10 rounded-full border border-dashed border-[#8B1111]/45 animate-spin-reverse pointer-events-none" />
+                  
+                  {/* Radial Red Aura */}
+                  <div className="absolute inset-16 sm:inset-20 rounded-full bg-gradient-to-tr from-[#8B1111]/25 via-[#FF2E2E]/15 to-transparent blur-lg pointer-events-none" />
+
+                  {/* High-Res Transparent Vektor Shield Emblem (Background Cleanly Removed) */}
+                  <img
+                    src="/hero-bg.png"
+                    alt="Vektor Shield Emblem"
+                    className="relative z-10 w-[270px] sm:w-[340px] lg:w-[370px] aspect-square object-contain filter drop-shadow-[0_0_50px_rgba(255,46,46,0.8)] animate-pulse-glow select-none"
+                  />
+
+                  {/* Floating Status Badges */}
+                  <div className="absolute -top-1 right-2 sm:right-6 z-20 animate-float-1 pointer-events-none">
+                    <div className="clay-card py-1.5 px-3 border border-[#FF2E2E]/40 flex items-center gap-2 text-xs font-mono shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
+                      <span className="text-white font-semibold">Active Defense</span>
+                    </div>
+                  </div>
+
+                  <div className="absolute -bottom-1 left-2 sm:left-6 z-20 animate-float-2 pointer-events-none">
+                    <div className="clay-card py-1.5 px-3 border border-[#8B1111]/60 flex items-center gap-2 text-xs font-mono shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+                      <span className="text-[#FF2E2E] font-bold">99.54%</span>
+                      <span className="text-[#B8B1AA]">ROC-AUC</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* 4 Wide Metric Tiles */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-6">
-                <div className="clay-card p-6 text-left space-y-2 backdrop-blur-md">
-                  <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Windows ROC-AUC</span>
-                  <span className="text-3xl font-bold font-mono text-[#FF2E2E] block">99.54%</span>
-                  <span className="text-xs text-[#B8B1AA]/80 block">UCI staDyn &bull; 244 Features</span>
-                </div>
-                <div className="clay-card p-6 text-left space-y-2 backdrop-blur-md">
-                  <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Windows Accuracy</span>
-                  <span className="text-3xl font-bold font-mono text-white block">97.97%</span>
-                  <span className="text-xs text-[#B8B1AA]/80 block">F1: 98.87% &bull; Recall: 98.00%</span>
-                </div>
-                <div className="clay-card p-6 text-left space-y-2 backdrop-blur-md">
-                  <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Android ROC-AUC</span>
-                  <span className="text-3xl font-bold font-mono text-[#FF2E2E] block">95.31%</span>
-                  <span className="text-xs text-[#B8B1AA]/80 block">KronoDroid &bull; 487 Features</span>
-                </div>
-                <div className="clay-card p-6 text-left space-y-2 backdrop-blur-md">
-                  <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Android Accuracy</span>
-                  <span className="text-3xl font-bold font-mono text-white block">91.14%</span>
-                  <span className="text-xs text-[#B8B1AA]/80 block">F1: 91.42% &bull; Recall: 90.38%</span>
-                </div>
+            </div>
+
+            {/* 4 Wide Metric Tiles Below */}
+            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-16">
+              <div className="clay-card p-6 text-left space-y-2">
+                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Windows ROC-AUC</span>
+                <span className="text-3xl font-bold font-mono text-[#FF2E2E] block">99.54%</span>
+                <span className="text-xs text-[#B8B1AA]/80 block">UCI staDyn &bull; 244 Features</span>
+              </div>
+              <div className="clay-card p-6 text-left space-y-2">
+                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Windows Accuracy</span>
+                <span className="text-3xl font-bold font-mono text-white block">97.97%</span>
+                <span className="text-xs text-[#B8B1AA]/80 block">F1: 98.87% &bull; Recall: 98.00%</span>
+              </div>
+              <div className="clay-card p-6 text-left space-y-2">
+                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Android ROC-AUC</span>
+                <span className="text-3xl font-bold font-mono text-[#FF2E2E] block">95.31%</span>
+                <span className="text-xs text-[#B8B1AA]/80 block">KronoDroid &bull; 487 Features</span>
+              </div>
+              <div className="clay-card p-6 text-left space-y-2">
+                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Android Accuracy</span>
+                <span className="text-3xl font-bold font-mono text-white block">91.14%</span>
+                <span className="text-xs text-[#B8B1AA]/80 block">F1: 91.42% &bull; Recall: 90.38%</span>
               </div>
             </div>
           </section>
