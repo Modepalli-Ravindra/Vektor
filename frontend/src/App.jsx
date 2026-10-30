@@ -35,6 +35,7 @@ export default function App() {
   // Navigation & User State
   const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'dashboard'
   const [dashboardTab, setDashboardTab] = useState('scanner'); // 'scanner' | 'history' | 'analytics' | 'models'
+  const [activeLandingSection, setActiveLandingSection] = useState('overview'); // 'overview' | 'architecture' | 'workflow'
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('sentinel_user');
@@ -130,6 +131,28 @@ export default function App() {
       setCurrentView('landing');
     }
   }, [currentView, user]);
+
+  // Highlight active page/section in navbar when scrolling landing page
+  useEffect(() => {
+    if (currentView !== 'landing') return;
+    const handleScroll = () => {
+      const sections = ['overview', 'architecture', 'workflow'];
+      const scrollPosition = window.scrollY + 220;
+      for (const sectionId of sections) {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveLandingSection(sectionId);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [currentView]);
 
   // Reset auth form state when opening/switching modal
   const openAuthWithMode = (mode) => {
@@ -417,9 +440,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen text-[#FFFFFF] flex flex-col bg-[#090909]">
-      {/* ──────────────── FLOATING SLEEK CLAYMORPHIC NAVBAR ──────────────── */}
-      <header className="sticky top-3.5 z-40 w-full flex justify-center px-3 sm:px-6">
-        <div className="w-[96%] max-w-[1700px] border border-[#FF2E2E] rounded-full bg-[#141010] shadow-[0_12px_30px_#000000,inset_1px_1px_1.5px_rgba(255,255,255,0.12),inset_-2px_-2px_4px_rgba(0,0,0,0.7)] px-5 sm:px-7 h-14 sm:h-16 flex items-center justify-between transition-all">
+      {/* ──────────────── FLOATING SLEEK CLAYMORPHIC NAVBAR (STRETCHED & PROMINENT ACTIVE BORDERS) ──────────────── */}
+      <header className="sticky top-3.5 z-40 w-full flex justify-center px-2 sm:px-6">
+        <div className="w-[98%] max-w-[1850px] border border-[#FF2E2E] rounded-full bg-[#141010] shadow-[0_12px_30px_#000000,inset_1px_1px_1.5px_rgba(255,255,255,0.12),inset_-2px_-2px_4px_rgba(0,0,0,0.7)] px-5 sm:px-8 h-14 sm:h-16 flex items-center justify-between transition-all">
           {/* Brand */}
           <div
             onClick={() => {
@@ -438,40 +461,76 @@ export default function App() {
             </div>
           </div>
 
-          {/* Navigation Links */}
+          {/* Navigation Links with Prominent Red Borders on Selected Pages */}
           {currentView === 'landing' ? (
-            <nav className="hidden md:flex items-center gap-7 text-xs sm:text-sm font-medium text-[#B8B1AA]">
-              <a href="#overview" className="hover:text-white transition-colors">Overview</a>
-              <a href="#architecture" className="hover:text-white transition-colors">Capabilities</a>
-              <a href="#workflow" className="hover:text-white transition-colors">Process</a>
-            </nav>
-          ) : (
-            <nav className="flex items-center gap-1 sm:gap-2">
+            <nav className="hidden md:flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-medium">
               <button
-                onClick={() => setDashboardTab('scanner')}
-                className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
-                  dashboardTab === 'scanner'
-                    ? 'bg-[#1e1515] text-[#FF2E2E] border border-[#FF2E2E]/60 shadow-[0_0_12px_rgba(255,46,46,0.3)] font-semibold'
-                    : 'text-[#B8B1AA] hover:text-white'
+                onClick={() => {
+                  setActiveLandingSection('overview');
+                  document.getElementById('overview')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all ${
+                  activeLandingSection === 'overview'
+                    ? 'border-2 border-[#FF2E2E] bg-[#221414] text-white shadow-[0_0_14px_rgba(255,46,46,0.5)] font-bold'
+                    : 'border-2 border-transparent text-[#B8B1AA] hover:text-white hover:border-[#8B1111]/50 font-medium'
                 }`}
               >
-                <ShieldCheckIcon className="w-4 h-4" />
+                Overview
+              </button>
+              <button
+                onClick={() => {
+                  setActiveLandingSection('architecture');
+                  document.getElementById('architecture')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all ${
+                  activeLandingSection === 'architecture'
+                    ? 'border-2 border-[#FF2E2E] bg-[#221414] text-white shadow-[0_0_14px_rgba(255,46,46,0.5)] font-bold'
+                    : 'border-2 border-transparent text-[#B8B1AA] hover:text-white hover:border-[#8B1111]/50 font-medium'
+                }`}
+              >
+                Capabilities
+              </button>
+              <button
+                onClick={() => {
+                  setActiveLandingSection('workflow');
+                  document.getElementById('workflow')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all ${
+                  activeLandingSection === 'workflow'
+                    ? 'border-2 border-[#FF2E2E] bg-[#221414] text-white shadow-[0_0_14px_rgba(255,46,46,0.5)] font-bold'
+                    : 'border-2 border-transparent text-[#B8B1AA] hover:text-white hover:border-[#8B1111]/50 font-medium'
+                }`}
+              >
+                Process
+              </button>
+            </nav>
+          ) : (
+            <nav className="flex items-center gap-1.5 sm:gap-2.5">
+              <button
+                onClick={() => setDashboardTab('scanner')}
+                className={`flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all ${
+                  dashboardTab === 'scanner'
+                    ? 'bg-[#221414] text-white border-2 border-[#FF2E2E] shadow-[0_0_14px_rgba(255,46,46,0.5)] font-bold'
+                    : 'text-[#B8B1AA] hover:text-white border-2 border-transparent hover:border-[#8B1111]/50 font-medium'
+                }`}
+              >
+                <ShieldCheckIcon className="w-4 h-4 text-[#FF2E2E]" />
                 <span>Scanner</span>
               </button>
 
               <button
                 onClick={() => setDashboardTab('history')}
-                className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
+                className={`flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all ${
                   dashboardTab === 'history'
-                    ? 'bg-[#1e1515] text-[#FF2E2E] border border-[#FF2E2E]/60 shadow-[0_0_12px_rgba(255,46,46,0.3)] font-semibold'
-                    : 'text-[#B8B1AA] hover:text-white'
+                    ? 'bg-[#221414] text-white border-2 border-[#FF2E2E] shadow-[0_0_14px_rgba(255,46,46,0.5)] font-bold'
+                    : 'text-[#B8B1AA] hover:text-white border-2 border-transparent hover:border-[#8B1111]/50 font-medium'
                 }`}
               >
-                <ClockIcon className="w-4 h-4" />
+                <ClockIcon className="w-4 h-4 text-[#FF2E2E]" />
                 <span className="hidden sm:inline">Scan</span>
                 <span>History</span>
                 {history.length > 0 && (
-                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#8B1111]/50 border border-[#FF2E2E]/40 text-[#FF2E2E]">
+                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#8B1111]/60 border border-[#FF2E2E] text-white font-bold">
                     {history.length}
                   </span>
                 )}
@@ -479,25 +538,25 @@ export default function App() {
 
               <button
                 onClick={() => setDashboardTab('analytics')}
-                className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
+                className={`flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all ${
                   dashboardTab === 'analytics'
-                    ? 'bg-[#1e1515] text-[#FF2E2E] border border-[#FF2E2E]/60 shadow-[0_0_12px_rgba(255,46,46,0.3)] font-semibold'
-                    : 'text-[#B8B1AA] hover:text-white'
+                    ? 'bg-[#221414] text-white border-2 border-[#FF2E2E] shadow-[0_0_14px_rgba(255,46,46,0.5)] font-bold'
+                    : 'text-[#B8B1AA] hover:text-white border-2 border-transparent hover:border-[#8B1111]/50 font-medium'
                 }`}
               >
-                <ChartBarIcon className="w-4 h-4" />
+                <ChartBarIcon className="w-4 h-4 text-[#FF2E2E]" />
                 <span>Analytics</span>
               </button>
 
               <button
                 onClick={() => setDashboardTab('models')}
-                className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
+                className={`flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all ${
                   dashboardTab === 'models'
-                    ? 'bg-[#1e1515] text-[#FF2E2E] border border-[#FF2E2E]/60 shadow-[0_0_12px_rgba(255,46,46,0.3)] font-semibold'
-                    : 'text-[#B8B1AA] hover:text-white'
+                    ? 'bg-[#221414] text-white border-2 border-[#FF2E2E] shadow-[0_0_14px_rgba(255,46,46,0.5)] font-bold'
+                    : 'text-[#B8B1AA] hover:text-white border-2 border-transparent hover:border-[#8B1111]/50 font-medium'
                 }`}
               >
-                <CpuChipIcon className="w-4 h-4" />
+                <CpuChipIcon className="w-4 h-4 text-[#FF2E2E]" />
                 <span className="hidden sm:inline">Model</span>
                 <span>Specs</span>
               </button>
@@ -575,8 +634,8 @@ export default function App() {
               <div className="absolute inset-0 bg-gradient-to-r from-[#090909]/60 via-transparent to-[#090909]/60" />
             </div>
 
-            {/* ──────────────── HERO CONTENT CONTAINER (W-FULL MAX-W-[1700PX]) ──────────────── */}
-            <div className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10 space-y-16">
+            {/* ──────────────── HERO CONTENT CONTAINER (W-FULL MAX-W-[1850PX] WIDE STRETCH) ──────────────── */}
+            <div className="w-full max-w-[1850px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 relative z-10 space-y-16">
               {/* 2-COLUMN SPLIT: LEFT = TEXT & CTAs, RIGHT = EMBLEM */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
                 
@@ -599,7 +658,7 @@ export default function App() {
                   </h1>
 
                   {/* Description */}
-                  <p className="text-base sm:text-lg text-[#B8B1AA] max-w-2xl leading-relaxed font-normal">
+                  <p className="text-base sm:text-lg text-[#B8B1AA] max-w-3xl sm:max-w-4xl leading-relaxed font-normal">
                     A deep learning detection system that classifies malicious files across Windows executables and Android application packages using spatial convolutional filters and long short-term memory recurrent networks.
                   </p>
 
@@ -683,9 +742,9 @@ export default function App() {
 
           
 
-          {/* Architecture Capabilities */}
-          <section id="architecture" className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-12 space-y-10">
-            <div className="text-center max-w-3xl mx-auto space-y-3.5 pb-2">
+          {/* Architecture Capabilities (Wide Stretched) */}
+          <section id="architecture" className="w-full max-w-[1850px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 space-y-12">
+            <div className="text-center max-w-4xl mx-auto space-y-3.5 pb-2">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/50">
                 <span className="text-xs font-mono uppercase tracking-wider text-[#FF2E2E] font-semibold">
                   Core Capabilities
@@ -702,8 +761,8 @@ export default function App() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="clay-card p-7 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              <div className="clay-card p-8 sm:p-9 space-y-4">
                 <div className="w-10 h-10 rounded-xl bg-[#191414] border border-[#8B1111]/40 text-[#FF2E2E] flex items-center justify-center shadow-[3px_3px_8px_#040404]">
                   <DocumentMagnifyingGlassIcon className="w-5 h-5" />
                 </div>
@@ -713,7 +772,7 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="clay-card p-7 space-y-4">
+              <div className="clay-card p-8 sm:p-9 space-y-4">
                 <div className="w-10 h-10 rounded-xl bg-[#191414] border border-[#8B1111]/40 text-[#FF2E2E] flex items-center justify-center shadow-[3px_3px_8px_#040404]">
                   <CpuChipIcon className="w-5 h-5" />
                 </div>
@@ -723,7 +782,7 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="clay-card p-7 space-y-4">
+              <div className="clay-card p-8 sm:p-9 space-y-4">
                 <div className="w-10 h-10 rounded-xl bg-[#191414] border border-[#8B1111]/40 text-[#FF2E2E] flex items-center justify-center shadow-[3px_3px_8px_#040404]">
                   <Square3Stack3DIcon className="w-5 h-5" />
                 </div>
@@ -735,9 +794,9 @@ export default function App() {
             </div>
           </section>
 
-          {/* Workflow */}
-          <section id="workflow" className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-12 space-y-10">
-            <div className="text-center max-w-3xl mx-auto space-y-3.5 pb-2">
+          {/* Workflow (Wide Stretched) */}
+          <section id="workflow" className="w-full max-w-[1850px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 space-y-12">
+            <div className="text-center max-w-4xl mx-auto space-y-3.5 pb-2">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/50">
                 <span className="text-xs font-mono uppercase tracking-wider text-[#FF2E2E] font-semibold">
                   Detection Process
@@ -754,8 +813,8 @@ export default function App() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="clay-card p-6 space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+              <div className="clay-card p-7 sm:p-8 space-y-3">
                 <span className="text-xs font-mono text-[#FF2E2E] font-semibold block">Step 1</span>
                 <h4 className="text-sm font-semibold text-white">Feature Extraction</h4>
                 <p className="text-xs text-[#B8B1AA] leading-relaxed">
@@ -789,9 +848,9 @@ export default function App() {
             </div>
           </section>
 
-          {/* Bottom Action Card */}
-          <section className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-12">
-            <div className="clay-card p-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Bottom Action Card (Wide Stretched) */}
+          <section className="w-full max-w-[1850px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
+            <div className="clay-card p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="space-y-1">
                 <h3 className="text-xl font-bold text-white">Ready to test a sample?</h3>
                 <p className="text-sm text-[#B8B1AA]">
@@ -812,7 +871,7 @@ export default function App() {
 
       {/* ──────────────── VIEW 2: SCANNER DASHBOARD ──────────────── */}
       {currentView === 'dashboard' && (
-        <main className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-10 py-5 space-y-5 flex-1">
+        <main className="w-full max-w-[1850px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 py-5 space-y-6 flex-1">
 
 
           {/* ════════════════════ TAB 1: SCANNER ════════════════════ */}
