@@ -801,25 +801,7 @@ export default function App() {
       {/* ──────────────── VIEW 2: SCANNER DASHBOARD ──────────────── */}
       {currentView === 'dashboard' && (
         <main className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-10 py-5 space-y-5 flex-1">
-          {/* Top Bar with Dynamic Title & Status */}
-          <div className="flex items-center justify-between pb-3 border-b border-[#8B1111]/30">
-            <div className="flex items-center gap-3">
-              <VektorLogo className="w-8 h-8" />
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                {dashboardTab === 'scanner' && 'Vektor Scanner'}
-                {dashboardTab === 'history' && 'Audit History Log'}
-                {dashboardTab === 'analytics' && 'Security Telemetry & System Analytics'}
-                {dashboardTab === 'models' && 'Deep Learning Architecture & Benchmarks'}
-              </h1>
-              {dashboardTab !== 'scanner' && (
-                <span className="clay-pill text-xs font-mono px-3 py-1 text-[#FF2E2E]">
-                  {dashboardTab === 'history' && `${history.length} SQLite Records`}
-                  {dashboardTab === 'analytics' && 'Active Metrics'}
-                  {dashboardTab === 'models' && 'Held-Out Validation'}
-                </span>
-              )}
-            </div>
-          </div>
+
 
           {/* ════════════════════ TAB 1: SCANNER ════════════════════ */}
           {dashboardTab === 'scanner' && (
@@ -1079,7 +1061,7 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* Forensic Assessment & Explanation Box (Requested: "explanations kuda ravali") */}
+                      {/* Forensic Assessment & Explanation Box */}
                       <div className="p-3.5 rounded-xl clay-inset space-y-2 text-xs text-[#B8B1AA] leading-relaxed">
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-mono text-white font-semibold flex items-center gap-1.5">
@@ -1103,6 +1085,54 @@ export default function App() {
                             : `Normal binary profile confirmed. The spatial filters and recurrent memory layers detected standard PE section headers, valid import tables, and routine API sequences. The classification score (${scanResult.raw_score}) is well below your configured sensitivity threshold of ${threshold.toFixed(2)}.`}
                         </p>
                       </div>
+
+                      {/* SHAP (SHapley Additive exPlanations) Feature Attribution Section */}
+                      {scanResult.shap_explanation && (
+                        <div className="p-3.5 rounded-xl clay-inset space-y-2.5 text-xs">
+                          <div className="flex items-center justify-between pb-1.5 border-b border-[#8B1111]/30">
+                            <span className="text-xs font-mono text-white font-semibold flex items-center gap-1.5">
+                              <CpuChipIcon className="w-4 h-4 text-[#FF2E2E]" />
+                              <span>SHAP Feature Attribution (Why this prediction?)</span>
+                            </span>
+                            <span className="text-[10px] font-mono text-[#B8B1AA]">
+                              Net SHAP: <strong className={scanResult.shap_explanation.net_shap_impact > 0 ? "text-[#FF2E2E]" : "text-emerald-400"}>
+                                {scanResult.shap_explanation.net_shap_impact > 0 ? '+' : ''}{scanResult.shap_explanation.net_shap_impact}
+                              </strong>
+                            </span>
+                          </div>
+
+                          <p className="text-[11px] text-[#B8B1AA] leading-relaxed">
+                            {scanResult.shap_explanation.summary}
+                          </p>
+
+                          {/* Top Contributing Features */}
+                          <div className="space-y-1.5 pt-1">
+                            {scanResult.shap_explanation.top_features?.map((feat, idx) => (
+                              <div key={idx} className="p-2 rounded-lg bg-[#141010] border border-[#8B1111]/30 space-y-1 text-xs font-mono">
+                                <div className="flex items-center justify-between gap-2">
+                                  <div className="flex items-center gap-1.5 truncate">
+                                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${feat.direction === 'malware' ? 'bg-[#FF2E2E]' : 'bg-emerald-400'}`} />
+                                    <span className="text-white font-semibold truncate text-[11px]">{feat.feature_name}</span>
+                                    <span className="text-[#B8B1AA] text-[10px]">({feat.value})</span>
+                                  </div>
+                                  <span
+                                    className={`text-[10px] font-bold px-2 py-0.5 rounded shrink-0 ${
+                                      feat.direction === 'malware'
+                                        ? 'bg-[#8B1111]/40 text-[#FF2E2E] border border-[#FF2E2E]/40'
+                                        : 'bg-emerald-950/40 text-emerald-300 border border-emerald-800/40'
+                                    }`}
+                                  >
+                                    {feat.shap_value > 0 ? `+${feat.shap_value}` : feat.shap_value} SHAP
+                                  </span>
+                                </div>
+                                <p className="text-[10px] text-[#B8B1AA] font-sans leading-normal">
+                                  {feat.reason}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       {/* Sample Details */}
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
