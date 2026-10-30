@@ -869,14 +869,14 @@ export default function App() {
 
       {/* ──────────────── VIEW 2: SCANNER DASHBOARD ──────────────── */}
       {currentView === 'dashboard' && (
-        <main className="w-full max-w-[1850px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 py-5 space-y-6 flex-1">
+        <main className="w-full max-w-[1850px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pt-8 sm:pt-10 pb-8 space-y-7 flex-1 flex flex-col justify-start">
 
 
           {/* ════════════════════ TAB 1: SCANNER ════════════════════ */}
           {dashboardTab === 'scanner' && (
-            <div className="space-y-6">
+            <div className="space-y-6 flex-1 flex flex-col">
               {/* Platform Switcher */}
-              <div className="clay-card p-2 flex flex-wrap items-center justify-between gap-3">
+              <div className="clay-card p-2.5 sm:p-3 flex flex-wrap items-center justify-between gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     onClick={() => {
@@ -935,10 +935,10 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 2-Column Wide Stretched Grid (50/50 Balance) */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+              {/* 2-Column Wide Stretched Grid (50/50 Balance & Generous Vertical Distribution) */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-7 sm:gap-8 items-stretch flex-1">
                 {/* Left Column: Manual Upload & Settings */}
-                <div className="clay-card p-7 sm:p-8 flex flex-col justify-between h-full space-y-6">
+                <div className="clay-card p-8 sm:p-9 flex flex-col justify-between h-full space-y-6">
                   <div>
                     <div className="flex items-center justify-between pb-4 border-b border-[#8B1111]/30">
                       <div className="flex items-center gap-2.5">
@@ -956,15 +956,15 @@ export default function App() {
                       </span>
                     </div>
 
-                    {/* Stretched Dropzone */}
-                    <div className="mt-6">
+                    {/* Stretched Dropzone with generous breathing room */}
+                    <div className="mt-5 sm:mt-6">
                       <div
                         onDragEnter={handleDrag}
                         onDragLeave={handleDrag}
                         onDragOver={handleDrag}
                         onDrop={handleDrop}
                         onClick={() => fileInputRef.current?.click()}
-                        className={`clay-inset p-6 sm:p-8 text-center cursor-pointer transition-all border-2 border-dashed ${
+                        className={`clay-inset p-8 sm:p-11 text-center cursor-pointer transition-all border-2 border-dashed flex flex-col items-center justify-center min-h-[190px] sm:min-h-[230px] ${
                           dragActive
                             ? 'border-[#FF2E2E] bg-[#1a1212]'
                             : selectedFile
@@ -1079,7 +1079,7 @@ export default function App() {
 
                 {/* Right Column: Live Detection Result OR Inference Engine Standby */}
                 {scanResult ? (
-                  <div className="clay-card p-7 sm:p-8 border border-[#FF2E2E]/50 flex flex-col justify-between h-full space-y-4 shadow-[0_8px_30px_rgba(255,46,46,0.2)]">
+                  <div className="clay-card p-8 sm:p-9 border border-[#FF2E2E]/50 flex flex-col justify-between h-full space-y-4 shadow-[0_8px_30px_rgba(255,46,46,0.2)]">
                     <div className="space-y-4">
                       {/* Compact Verdict Header with Reduced Text Size */}
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#8B1111]/30">
@@ -1265,7 +1265,7 @@ export default function App() {
                     </div>
                   </div>
                 ) : (
-                  <div className="clay-card p-7 sm:p-8 flex flex-col justify-between h-full space-y-6">
+                  <div className="clay-card p-8 sm:p-9 flex flex-col justify-between h-full space-y-6">
                     <div>
                       <div className="flex items-center justify-between pb-4 border-b border-[#8B1111]/30">
                         <div className="flex items-center gap-2.5">
@@ -1281,7 +1281,7 @@ export default function App() {
                         Vektor dual-platform neural detection engine is loaded and awaiting file ingestion. Load a Windows executable (.exe/.dll) or Android package (.apk) on the left panel to begin forensic feature extraction and deep sequence classification.
                       </p>
 
-                      <div className="mt-5 p-4 rounded-xl clay-inset space-y-2.5 text-xs text-[#B8B1AA] leading-relaxed">
+                      <div className="mt-5 p-5 sm:p-6 rounded-2xl clay-inset space-y-3 text-xs text-[#B8B1AA] leading-relaxed">
                         <span className="text-xs font-mono text-[#FF2E2E] uppercase font-semibold block">
                           Inference Pipeline Overview
                         </span>
@@ -1291,14 +1291,14 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="clay-inset p-4 text-xs font-mono space-y-2 text-[#B8B1AA]">
+                    <div className="clay-inset p-4 sm:p-5 rounded-2xl text-xs font-mono space-y-2.5 text-[#B8B1AA]">
                       <div className="flex justify-between">
                         <span>Windows Model Engine</span>
-                        <span className="text-emerald-400">Ready &bull; 9,601 Weights</span>
+                        <span className="text-emerald-400">Ready • 9,601 Weights</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Android Model Engine</span>
-                        <span className="text-emerald-400">Ready &bull; 9,601 Weights</span>
+                        <span className="text-emerald-400">Ready • 9,601 Weights</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Audit Database</span>
