@@ -21,7 +21,8 @@ import {
   BoltIcon,
   CheckCircleIcon,
   KeyIcon,
-  UserPlusIcon
+  UserPlusIcon,
+  UserIcon
 } from '@heroicons/react/24/outline';
 import VektorLogo from './components/VektorLogo';
 
@@ -1562,14 +1563,17 @@ export default function App() {
               {/* Full Name Field (Create Account Only) */}
               {authMode === 'signup' && (
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-[#B8B1AA]">Full Name</label>
+                  <label className="text-xs font-medium text-[#B8B1AA] flex items-center gap-1.5">
+                    <UserIcon className="w-3.5 h-3.5 text-[#FF2E2E]" />
+                    <span>Full Name</span>
+                  </label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Modepalli Ravindra"
                     value={authFullName}
                     onChange={(e) => setAuthFullName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 clay-inset text-xs text-white placeholder-[#B8B1AA]/50 focus:outline-none focus:border-[#FF2E2E]/60"
+                    className="w-full px-3.5 py-2.5 clay-inset text-xs text-white placeholder-[#B8B1AA]/50 focus:outline-none focus:border-[#FF2E2E]/60 border border-[#8B1111]/30"
                   />
                 </div>
               )}
