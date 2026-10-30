@@ -508,22 +508,21 @@ export default function App() {
       {currentView === 'landing' && (
         <div className="flex-1 space-y-28 pb-28">
           {/* Hero Section */}
-          <section id="overview" className="relative max-w-7xl mx-auto px-6 lg:px-10 pt-28 sm:pt-32 pb-12 text-center space-y-8 overflow-hidden rounded-3xl">
-            {/* Ambient Hero Logo Background */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10 overflow-hidden">
-              {/* Radial Red Ambient Glow */}
-              <div className="absolute w-[600px] sm:w-[800px] h-[600px] sm:h-[800px] bg-[#8B1111]/25 rounded-full blur-[100px] pointer-events-none" />
-              <div className="absolute w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-[#FF2E2E]/15 rounded-full blur-[70px] pointer-events-none" />
+          <section id="overview" className="relative max-w-7xl mx-auto px-6 lg:px-10 pt-24 sm:pt-28 pb-16 text-center space-y-10 overflow-hidden rounded-3xl">
+            {/* 3D Cyber Perspective Background Grid & Volumetric Glow */}
+            <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
+              {/* Cyber Grid Layer with Smooth Radial Mask */}
+              <div className="absolute inset-0 cyber-grid [mask-image:radial-gradient(ellipse_75%_65%_at_50%_50%,#000_70%,transparent_100%)] opacity-60" />
+              
+              {/* Deep Red Volumetric Radial Glow */}
+              <div className="absolute inset-0 hero-glow" />
+              
+              {/* Ambient Circular Glow orbs */}
+              <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] sm:w-[900px] h-[650px] sm:h-[900px] bg-[#8B1111]/25 rounded-full blur-[130px] pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-[#FF2E2E]/18 rounded-full blur-[90px] pointer-events-none" />
 
-              {/* Big Vektor Shield Emblem Backdrop */}
-              <img
-                src="/hero-bg.png"
-                alt="Vektor Shield Emblem"
-                className="w-[480px] sm:w-[650px] lg:w-[780px] aspect-square object-contain opacity-30 filter drop-shadow-[0_0_60px_rgba(255,46,46,0.4)] select-none"
-              />
-
-              {/* Soft Vignette Overlay to guarantee text readability */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/70 via-transparent to-[#090909]" />
+              {/* Edge Vignette for clean blending into #090909 */}
+              <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/50 via-transparent to-[#090909]" />
             </div>
 
             {/* Pill Tag with Logo */}
@@ -543,7 +542,7 @@ export default function App() {
               A deep learning detection system that classifies malicious files across Windows executables and Android application packages using spatial convolutional filters and long short-term memory recurrent networks.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-1">
               <button
                 onClick={() => {
                   if (user) setCurrentView('dashboard');
@@ -561,8 +560,59 @@ export default function App() {
               </a>
             </div>
 
+            {/* ──────────────── 3D HOLOGRAPHIC SHIELD RADAR SHOWCASE ──────────────── */}
+            <div className="relative py-12 my-2 flex items-center justify-center select-none">
+              {/* Outer Radar Ring with crosshair ticks */}
+              <div className="absolute w-[320px] sm:w-[460px] lg:w-[560px] aspect-square rounded-full border border-[#FF2E2E]/25 animate-spin-slow pointer-events-none flex items-center justify-center">
+                <div className="absolute top-0 w-2.5 h-2.5 rounded-full bg-[#FF2E2E] shadow-[0_0_10px_#FF2E2E]" />
+                <div className="absolute bottom-0 w-2.5 h-2.5 rounded-full bg-[#8B1111]" />
+                <div className="absolute left-0 w-2.5 h-2.5 rounded-full bg-[#8B1111]" />
+                <div className="absolute right-0 w-2.5 h-2.5 rounded-full bg-[#FF2E2E] shadow-[0_0_10px_#FF2E2E]" />
+              </div>
+
+              {/* Middle Dashed Radar Ring with Reverse Spin */}
+              <div className="absolute w-[240px] sm:w-[350px] lg:w-[430px] aspect-square rounded-full border border-dashed border-[#8B1111]/60 animate-spin-reverse pointer-events-none" />
+
+              {/* Inner Pulsing Radar Glow Ring */}
+              <div className="absolute w-[180px] sm:w-[260px] lg:w-[320px] aspect-square rounded-full border border-[#FF2E2E]/40 shadow-[0_0_35px_rgba(255,46,46,0.3)] animate-pulse-glow pointer-events-none" />
+
+              {/* Floating 3D Clay Badges around the Shield */}
+              {/* Badge 1: Top Left */}
+              <div className="absolute -top-1 left-2 sm:left-12 lg:left-24 animate-float-1 hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full clay-card border-[#FF2E2E]/40 text-xs font-mono shadow-[0_8px_20px_#000000]">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+                <span className="text-white">Latency &bull; &lt;45ms</span>
+              </div>
+
+              {/* Badge 2: Top Right */}
+              <div className="absolute -top-1 right-2 sm:right-12 lg:right-24 animate-float-2 hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full clay-card border-[#FF2E2E]/40 text-xs font-mono shadow-[0_8px_20px_#000000]">
+                <span className="w-2 h-2 rounded-full bg-[#FF2E2E] shadow-[0_0_6px_#FF2E2E]" />
+                <span className="text-white">99.54% Held-Out ROC-AUC</span>
+              </div>
+
+              {/* Badge 3: Bottom Left */}
+              <div className="absolute -bottom-1 left-4 sm:left-16 lg:left-28 animate-float-2 hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full clay-card border-[#FF2E2E]/40 text-xs font-mono shadow-[0_8px_20px_#000000]">
+                <span className="w-2 h-2 rounded-full bg-[#FF2E2E] shadow-[0_0_6px_#FF2E2E]" />
+                <span className="text-white">Static Zero-Execution</span>
+              </div>
+
+              {/* Badge 4: Bottom Right */}
+              <div className="absolute -bottom-1 right-4 sm:right-16 lg:right-28 animate-float-1 hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full clay-card border-[#FF2E2E]/40 text-xs font-mono shadow-[0_8px_20px_#000000]">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+                <span className="text-white">Windows &amp; Android Dual Core</span>
+              </div>
+
+              {/* Central Glowing 3D Shield Emblem */}
+              <div className="relative z-10 w-44 sm:w-56 lg:w-64 aspect-square flex items-center justify-center filter drop-shadow-[0_0_45px_rgba(255,46,46,0.7)] hover:scale-105 transition-transform duration-300">
+                <img
+                  src="/hero-bg.png"
+                  alt="Vektor 3D Shield Emblem"
+                  className="w-full h-full object-contain filter drop-shadow-[0_0_25px_rgba(255,46,46,0.85)]"
+                />
+              </div>
+            </div>
+
             {/* 4 Wide Metric Tiles */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
               <div className="clay-card p-6 text-left space-y-2">
                 <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Windows ROC-AUC</span>
                 <span className="text-3xl font-bold font-mono text-[#FF2E2E] block">99.54%</span>
