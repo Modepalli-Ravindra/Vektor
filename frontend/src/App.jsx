@@ -77,6 +77,8 @@ export default function App() {
   const [threshold, setThreshold] = useState(0.5);
   const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState(null);
+  const [resultSubTab, setResultSubTab] = useState('overview'); // 'overview' | 'shap'
+  const [scanStage, setScanStage] = useState(0);
   const [scanError, setScanError] = useState(null);
   const [dragActive, setDragActive] = useState(false);
 
@@ -377,12 +379,17 @@ export default function App() {
     setSelectedFile(file);
   };
 
-  // Scan uploaded file
+  // Scan uploaded file with live pipeline stage animation
   const handleScan = async () => {
     if (!selectedFile) return;
     setScanning(true);
+    setScanStage(0);
     setScanError(null);
     setScanResult(null);
+
+    const stageTimer = setInterval(() => {
+      setScanStage((prev) => (prev < 4 ? prev + 1 : prev));
+    }, 280);
 
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -402,10 +409,12 @@ export default function App() {
 
       const result = await res.json();
       setScanResult(result);
+      setResultSubTab('overview');
       fetchHealthAndStats();
     } catch (err) {
       setScanError(err.message || 'Unable to connect to the backend server.');
     } finally {
+      clearInterval(stageTimer);
       setScanning(false);
     }
   };
@@ -1130,41 +1139,133 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* Forensic Assessment & Explanation Box */}
-                      <div className="p-3.5 rounded-xl clay-inset space-y-2 text-xs text-[#B8B1AA] leading-relaxed">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-mono text-white font-semibold flex items-center gap-1.5">
-                            <DocumentMagnifyingGlassIcon className="w-4 h-4 text-[#FF2E2E]" />
-                            <span>Forensic Analysis Explanation</span>
-                          </span>
-                          <span
-                            className={`text-[10px] font-mono px-2 py-0.5 rounded font-semibold ${
-                              scanResult.is_malware
-                                ? 'bg-[#8B1111]/50 text-[#FF2E2E] border border-[#FF2E2E]/40'
-                                : 'bg-emerald-950/50 text-emerald-300 border border-emerald-800/40'
+                      {/* Sub-Tab Navigation Toggle: Forensic Overview vs SHAP Explainability (Zero-Scroll Mode) */}
+                      <div className="flex items-center gap-2 p-1.5 rounded-xl clay-inset">
+                        <button
+                          type="button"
+                          onClick={() => setResultSubTab('overview')}
+                          className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs transition-all ${
+                            resultSubTab === 'overview'
+                              ? 'bg-[#1e1515] text-white border-2 border-[#FF2E2E] shadow-[0_0_12px_rgba(255,46,46,0.4)] font-bold'
+                              : 'text-[#B8B1AA] hover:text-white border-2 border-transparent hover:border-[#8B1111]/40 font-medium'
+                          }`}
+                        >
+                          <DocumentMagnifyingGlassIcon className="w-4 h-4 text-[#FF2E2E]" />
+                          <span>Forensic Overview</span>
+                        </button>
+
+                        {scanResult.shap_explanation && (
+                          <button
+                            type="button"
+                            onClick={() => setResultSubTab('shap')}
+                            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs transition-all ${
+                              resultSubTab === 'shap'
+                                ? 'bg-[#1e1515] text-white border-2 border-[#FF2E2E] shadow-[0_0_12px_rgba(255,46,46,0.4)] font-bold'
+                                : 'text-[#B8B1AA] hover:text-white border-2 border-transparent hover:border-[#8B1111]/40 font-medium'
                             }`}
                           >
-                            {scanResult.is_malware ? 'High Threat Severity' : 'Verified Benign Utility'}
-                          </span>
-                        </div>
-
-                        <p className="text-[11px] leading-relaxed text-[#B8B1AA]">
-                          {scanResult.is_malware
-                            ? `Structural anomaly detected. The 32 Conv1D spatial filters identified suspicious opcode grouping and packing signatures, while the temporal LSTM units identified malicious execution call chains. The classification probability (${scanResult.raw_score}) exceeded your configured threshold of ${threshold.toFixed(2)}.`
-                            : `Normal binary profile confirmed. The spatial filters and recurrent memory layers detected standard PE section headers, valid import tables, and routine API sequences. The classification score (${scanResult.raw_score}) is well below your configured sensitivity threshold of ${threshold.toFixed(2)}.`}
-                        </p>
+                            <CpuChipIcon className="w-4 h-4 text-[#FF2E2E]" />
+                            <span>SHAP Explainability</span>
+                            <span
+                              className={`text-[10px] font-mono px-1.5 py-0.5 rounded font-bold ${
+                                scanResult.shap_explanation.net_shap_impact > 0
+                                  ? 'bg-[#8B1111]/60 text-[#FF2E2E] border border-[#FF2E2E]/40'
+                                  : 'bg-emerald-950/60 text-emerald-300 border border-emerald-800/40'
+                              }`}
+                            >
+                              {scanResult.shap_explanation.net_shap_impact > 0 ? '+' : ''}
+                              {scanResult.shap_explanation.net_shap_impact}
+                            </span>
+                          </button>
+                        )}
                       </div>
 
-                      {/* SHAP (SHapley Additive exPlanations) Feature Attribution Section */}
-                      {scanResult.shap_explanation && (
-                        <div className="p-3.5 rounded-xl clay-inset space-y-2.5 text-xs">
+                      {/* SUB-VIEW A: Forensic Overview (Metadata, Architecture, SHA-256) */}
+                      {resultSubTab === 'overview' && (
+                        <div className="space-y-3">
+                          {/* Forensic Assessment & Explanation Box */}
+                          <div className="p-3.5 rounded-xl clay-inset space-y-2 text-xs text-[#B8B1AA] leading-relaxed">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-mono text-white font-semibold flex items-center gap-1.5">
+                                <DocumentMagnifyingGlassIcon className="w-4 h-4 text-[#FF2E2E]" />
+                                <span>Forensic Analysis Explanation</span>
+                              </span>
+                              <span
+                                className={`text-[10px] font-mono px-2 py-0.5 rounded font-semibold ${
+                                  scanResult.is_malware
+                                    ? 'bg-[#8B1111]/50 text-[#FF2E2E] border border-[#FF2E2E]/40'
+                                    : 'bg-emerald-950/50 text-emerald-300 border border-emerald-800/40'
+                                }`}
+                              >
+                                {scanResult.is_malware ? 'High Threat Severity' : 'Verified Benign Utility'}
+                              </span>
+                            </div>
+
+                            <p className="text-[11px] leading-relaxed text-[#B8B1AA]">
+                              {scanResult.is_malware
+                                ? `Structural anomaly detected. The 32 Conv1D spatial filters identified suspicious opcode grouping and packing signatures, while the temporal LSTM units identified malicious execution call chains. The classification probability (${scanResult.raw_score}) exceeded your configured threshold of ${threshold.toFixed(2)}.`
+                                : `Normal binary profile confirmed. The spatial filters and recurrent memory layers detected standard PE section headers, valid import tables, and routine API sequences. The classification score (${scanResult.raw_score}) is well below your configured sensitivity threshold of ${threshold.toFixed(2)}.`}
+                            </p>
+                          </div>
+
+                          {/* Sample Details */}
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+                            <div className="clay-inset p-3">
+                              <span className="text-[#B8B1AA] block mb-0.5 text-[11px]">Target Filename</span>
+                              <span className="text-white truncate block font-semibold">{scanResult.filename}</span>
+                            </div>
+                            <div className="clay-inset p-3">
+                              <span className="text-[#B8B1AA] block mb-0.5 text-[11px]">Feature Count</span>
+                              <span className="text-[#FF2E2E] block font-semibold">
+                                {scanResult.input_features_count ? `${scanResult.input_features_count} Tabular Features` : '32x32 Matrix'}
+                              </span>
+                            </div>
+                            <div className="clay-inset p-3">
+                              <span className="text-[#B8B1AA] block mb-0.5 text-[11px]">Architecture</span>
+                              <span className="text-white truncate block font-semibold">
+                                {scanResult.model_architecture || 'Conv1D + LSTM'}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* SHA-256 Checksum */}
+                          <div className="clay-inset p-3 text-xs font-mono">
+                            <span className="text-[#B8B1AA] block text-[11px] mb-0.5">SHA-256 Checksum</span>
+                            <span className="text-[#FF2E2E] break-all select-all font-medium text-[11px]">{scanResult.sha256}</span>
+                          </div>
+
+                          {/* Grad-CAM Heatmap if visual mode */}
+                          {scanResult.gradcam_base64 && (
+                            <div className="pt-2 border-t border-[#8B1111]/30 space-y-2">
+                              <div className="flex justify-between items-center text-xs">
+                                <span className="font-semibold text-white flex items-center gap-2">
+                                  <Square3Stack3DIcon className="w-4 h-4 text-[#FF2E2E]" />
+                                  Grad-CAM Visual Heatmap
+                                </span>
+                                <span className="text-xs font-mono text-[#B8B1AA]">32x32 Byte Matrix</span>
+                              </div>
+                              <div className="clay-inset p-3 flex justify-center">
+                                <img
+                                  src={`data:image/png;base64,${scanResult.gradcam_base64}`}
+                                  alt="Grad-CAM Saliency Heatmap"
+                                  className="max-w-full h-auto rounded-xl"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* SUB-VIEW B: SHAP Feature Attribution (Zero-Scroll Mode) */}
+                      {resultSubTab === 'shap' && scanResult.shap_explanation && (
+                        <div className="p-3.5 rounded-xl clay-inset space-y-2 text-xs">
                           <div className="flex items-center justify-between pb-1.5 border-b border-[#8B1111]/30">
                             <span className="text-xs font-mono text-white font-semibold flex items-center gap-1.5">
                               <CpuChipIcon className="w-4 h-4 text-[#FF2E2E]" />
                               <span>SHAP Feature Attribution (Why this prediction?)</span>
                             </span>
                             <span className="text-[10px] font-mono text-[#B8B1AA]">
-                              Net SHAP: <strong className={scanResult.shap_explanation.net_shap_impact > 0 ? "text-[#FF2E2E]" : "text-emerald-400"}>
+                              Net Impact: <strong className={scanResult.shap_explanation.net_shap_impact > 0 ? "text-[#FF2E2E]" : "text-emerald-400"}>
                                 {scanResult.shap_explanation.net_shap_impact > 0 ? '+' : ''}{scanResult.shap_explanation.net_shap_impact}
                               </strong>
                             </span>
@@ -1174,8 +1275,8 @@ export default function App() {
                             {scanResult.shap_explanation.summary}
                           </p>
 
-                          {/* Top Contributing Features */}
-                          <div className="space-y-1.5 pt-1">
+                          {/* Top Contributing Features with Compact Scroll */}
+                          <div className="max-h-[220px] sm:max-h-[250px] overflow-y-auto space-y-1.5 pr-1 pt-1">
                             {scanResult.shap_explanation.top_features?.map((feat, idx) => (
                               <div key={idx} className="p-2 rounded-lg bg-[#141010] border border-[#8B1111]/30 space-y-1 text-xs font-mono">
                                 <div className="flex items-center justify-between gap-2">
@@ -1199,52 +1300,6 @@ export default function App() {
                                 </p>
                               </div>
                             ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Sample Details */}
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
-                        <div className="clay-inset p-3">
-                          <span className="text-[#B8B1AA] block mb-0.5 text-[11px]">Target Filename</span>
-                          <span className="text-white truncate block font-semibold">{scanResult.filename}</span>
-                        </div>
-                        <div className="clay-inset p-3">
-                          <span className="text-[#B8B1AA] block mb-0.5 text-[11px]">Feature Count</span>
-                          <span className="text-[#FF2E2E] block font-semibold">
-                            {scanResult.input_features_count ? `${scanResult.input_features_count} Tabular Features` : '32x32 Matrix'}
-                          </span>
-                        </div>
-                        <div className="clay-inset p-3">
-                          <span className="text-[#B8B1AA] block mb-0.5 text-[11px]">Architecture</span>
-                          <span className="text-white truncate block font-semibold">
-                            {scanResult.model_architecture || 'Conv1D + LSTM'}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* SHA-256 Checksum */}
-                      <div className="clay-inset p-3 text-xs font-mono">
-                        <span className="text-[#B8B1AA] block text-[11px] mb-0.5">SHA-256 Checksum</span>
-                        <span className="text-[#FF2E2E] break-all select-all font-medium text-[11px]">{scanResult.sha256}</span>
-                      </div>
-
-                      {/* Grad-CAM Heatmap if visual mode */}
-                      {scanResult.gradcam_base64 && (
-                        <div className="pt-3 border-t border-[#8B1111]/30 space-y-2">
-                          <div className="flex justify-between items-center text-xs">
-                            <span className="font-semibold text-white flex items-center gap-2">
-                              <Square3Stack3DIcon className="w-4 h-4 text-[#FF2E2E]" />
-                              Grad-CAM Visual Heatmap
-                            </span>
-                            <span className="text-xs font-mono text-[#B8B1AA]">32x32 Byte Matrix</span>
-                          </div>
-                          <div className="clay-inset p-3 flex justify-center">
-                            <img
-                              src={`data:image/png;base64,${scanResult.gradcam_base64}`}
-                              alt="Grad-CAM Saliency Heatmap"
-                              className="max-w-full h-auto rounded-xl"
-                            />
                           </div>
                         </div>
                       )}
@@ -1688,6 +1743,79 @@ export default function App() {
       )}
 
       {/* ──────────────── AUTHENTICATION MODAL (REAL LOGIN / SIGN UP / FORGOT PASSWORD) ──────────────── */}
+            {/* ──────────────── SCANNING MODAL LOADER (BLUR BACKDROP & HIGHLIGHTED CYBER ANIMATION) ──────────────── */}
+      {scanning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 transition-all">
+          <div className="clay-card p-8 sm:p-10 max-w-lg w-full border-2 border-[#FF2E2E] shadow-[0_0_60px_rgba(255,46,46,0.45)] text-center space-y-6 relative overflow-hidden">
+            {/* Ambient Red Glow in Card Background */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#8B1111]/25 via-transparent to-[#FF2E2E]/10 pointer-events-none" />
+
+            {/* Central Animated Cyber Radar & Shield */}
+            <div className="relative w-28 h-28 mx-auto flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full border-2 border-dashed border-[#FF2E2E]/40 animate-orbit-spin" />
+              <div className="absolute inset-2 rounded-full border border-[#8B1111]/60 animate-pulse" />
+              <div className="absolute inset-4 rounded-full bg-[#8B1111]/30 blur-xl animate-glow-pulse" />
+              <img
+                src="/hero-bg.png"
+                alt="Vektor Scanning"
+                className="relative z-10 w-16 h-16 object-contain animate-hero-logo filter drop-shadow-[0_0_16px_rgba(255,46,46,0.8)]"
+              />
+            </div>
+
+            {/* Title & Target Sample */}
+            <div className="space-y-1 relative z-10">
+              <h3 className="text-lg sm:text-xl font-bold text-white tracking-wide uppercase">
+                Neural Threat Analysis Active
+              </h3>
+              <p className="text-xs font-mono text-[#B8B1AA]">
+                Analyzing: <span className="text-[#FF2E2E] font-semibold">{selectedFile?.name || 'Binary Staged'}</span>
+              </p>
+            </div>
+
+            {/* Cyber Scanning Stages Pipeline */}
+            <div className="space-y-2 text-left relative z-10">
+              {[
+                'Ingesting Binary & Computing SHA-256 Checksum',
+                'Extracting Tabular Feature Vector Representation',
+                '32 Conv1D Kernels Detecting Spatial Opcode Clusters',
+                '32 LSTM Temporal Memory Cells Modeling API Call Sequences',
+                'Calibrating Sigmoid Probability & Generating SHAP Attributions'
+              ].map((stageLabel, sIdx) => (
+                <div
+                  key={sIdx}
+                  className={`flex items-center gap-2.5 p-2 rounded-lg text-xs font-mono transition-all ${
+                    scanStage === sIdx
+                      ? 'bg-[#1e1515] text-[#FF2E2E] border border-[#FF2E2E]/50 font-semibold shadow-[0_0_10px_rgba(255,46,46,0.3)]'
+                      : scanStage > sIdx
+                      ? 'text-emerald-400 bg-emerald-950/20 border border-emerald-800/30'
+                      : 'text-[#B8B1AA]/50 opacity-60'
+                  }`}
+                >
+                  {scanStage > sIdx ? (
+                    <CheckCircleIcon className="w-4 h-4 text-emerald-400 shrink-0" />
+                  ) : scanStage === sIdx ? (
+                    <ArrowPathIcon className="w-4 h-4 text-[#FF2E2E] animate-spin shrink-0" />
+                  ) : (
+                    <div className="w-4 h-4 rounded-full border border-[#8B1111]/50 flex items-center justify-center text-[10px] shrink-0 text-[#B8B1AA]">
+                      {sIdx + 1}
+                    </div>
+                  )}
+                  <span className="truncate">{stageLabel}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Animated Progress Bar */}
+            <div className="w-full bg-[#0d0a0a] rounded-full h-2 overflow-hidden border border-[#8B1111]/40 relative z-10">
+              <div
+                className="bg-gradient-to-r from-[#8B1111] via-[#FF2E2E] to-white h-full transition-all duration-300 rounded-full"
+                style={{ width: `${Math.min(100, (scanStage + 1) * 20)}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {authModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80">
           <div className="clay-card w-full max-w-md p-8 space-y-6 relative rounded-2xl border-[#8B1111]/50 bg-[#141111] max-h-[90vh] overflow-y-auto">
