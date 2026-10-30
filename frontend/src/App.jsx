@@ -442,8 +442,7 @@ export default function App() {
           {currentView === 'landing' ? (
             <nav className="hidden md:flex items-center gap-7 text-xs sm:text-sm font-medium text-[#B8B1AA]">
               <a href="#overview" className="hover:text-white transition-colors">Overview</a>
-              <a href="#benchmarks" className="hover:text-white transition-colors">Benchmarks</a>
-              <a href="#architecture" className="hover:text-white transition-colors">Architecture</a>
+              <a href="#architecture" className="hover:text-white transition-colors">Capabilities</a>
               <a href="#workflow" className="hover:text-white transition-colors">Process</a>
             </nav>
           ) : (
@@ -604,9 +603,9 @@ export default function App() {
                       <ArrowRightIcon className="w-4 h-4" />
                     </button>
 
-                    <a href="#benchmarks" className="clay-btn-secondary text-sm py-3 px-7 justify-center shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-                      <ChartBarIcon className="w-4 h-4 text-[#FF2E2E]" />
-                      <span>View Results</span>
+                    <a href="#architecture" className="clay-btn-secondary text-sm py-3 px-7 justify-center shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+                      <CpuChipIcon className="w-4 h-4 text-[#FF2E2E]" />
+                      <span>Explore Capabilities</span>
                     </a>
                   </div>
 
@@ -672,159 +671,32 @@ export default function App() {
 
             </div>
 
-            {/* 4 Wide Metric Tiles Below */}
+            {/* 4 Core Platform Pillars */}
             <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-16">
               <div className="clay-card p-6 text-left space-y-2">
-                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Windows ROC-AUC</span>
-                <span className="text-3xl font-bold font-mono text-[#FF2E2E] block">99.54%</span>
-                <span className="text-xs text-[#B8B1AA]/80 block">UCI staDyn &bull; 244 Features</span>
+                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Multi-Platform</span>
+                <span className="text-xl sm:text-2xl font-bold text-white block">Dual Engine</span>
+                <span className="text-xs text-[#B8B1AA]/80 block">Windows PE &bull; Android APK</span>
               </div>
               <div className="clay-card p-6 text-left space-y-2">
-                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Windows Accuracy</span>
-                <span className="text-3xl font-bold font-mono text-white block">97.97%</span>
-                <span className="text-xs text-[#B8B1AA]/80 block">F1: 98.87% &bull; Recall: 98.00%</span>
+                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Spatial Feature Extractor</span>
+                <span className="text-xl sm:text-2xl font-bold text-[#FF2E2E] block">Conv1D Layers</span>
+                <span className="text-xs text-[#B8B1AA]/80 block">32 Kernels &bull; Structural Mining</span>
               </div>
               <div className="clay-card p-6 text-left space-y-2">
-                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Android ROC-AUC</span>
-                <span className="text-3xl font-bold font-mono text-[#FF2E2E] block">95.31%</span>
-                <span className="text-xs text-[#B8B1AA]/80 block">KronoDroid &bull; 487 Features</span>
+                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Temporal Sequence Memory</span>
+                <span className="text-xl sm:text-2xl font-bold text-white block">LSTM Units</span>
+                <span className="text-xs text-[#B8B1AA]/80 block">Long-range API Trace Dependency</span>
               </div>
               <div className="clay-card p-6 text-left space-y-2">
-                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Android Accuracy</span>
-                <span className="text-3xl font-bold font-mono text-white block">91.14%</span>
-                <span className="text-xs text-[#B8B1AA]/80 block">F1: 91.42% &bull; Recall: 90.38%</span>
+                <span className="text-xs font-mono text-[#B8B1AA] uppercase block">Explainable AI (XAI)</span>
+                <span className="text-xl sm:text-2xl font-bold text-[#FF2E2E] block">Grad-CAM Saliency</span>
+                <span className="text-xs text-[#B8B1AA]/80 block">Transparent Byte Visual Maps</span>
               </div>
             </div>
           </section>
 
-          {/* Benchmarks Section */}
-          <section id="benchmarks" className="max-w-7xl mx-auto px-6 lg:px-10 space-y-10">
-            <div className="text-center max-w-3xl mx-auto space-y-3.5 pb-2">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/50">
-                <span className="text-xs font-mono uppercase tracking-wider text-[#FF2E2E] font-semibold">
-                  Experimental Results
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-                Held-Out Benchmark Validation
-              </h2>
-              {/* Center Border Accent Line */}
-              <div className="flex items-center justify-center gap-2 pt-1 pb-1">
-                <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#8B1111]" />
-                <div className="w-20 h-[2px] bg-[#FF2E2E] rounded-full shadow-[0_0_8px_#FF2E2E]" />
-                <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#8B1111]" />
-              </div>
-              <p className="text-sm sm:text-base text-[#B8B1AA] max-w-2xl mx-auto leading-relaxed">
-                Evaluated separately on held-out test splits. CNN layers extract structural patterns while LSTM layers capture sequence dependencies.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Windows Benchmark Card */}
-              <div className="clay-card p-8 space-y-6">
-                <div className="flex items-center justify-between pb-4 border-b border-[#8B1111]/30">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#191414] border border-[#8B1111]/40 text-[#FF2E2E] flex items-center justify-center shadow-[3px_3px_8px_#040404]">
-                      <ComputerDesktopIcon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-semibold text-white">Windows PE Platform</h3>
-                      <span className="text-xs font-mono text-[#B8B1AA]">UCI staDyn Dataset (6,248 Samples)</span>
-                    </div>
-                  </div>
-                  <span className="clay-pill text-xs font-mono px-3 py-1 text-[#FF2E2E]">
-                    244 Features
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div className="clay-inset p-4">
-                    <span className="text-xs text-[#B8B1AA] block">Accuracy</span>
-                    <span className="text-xl font-bold font-mono text-white mt-1 block">97.97%</span>
-                  </div>
-                  <div className="clay-inset p-4">
-                    <span className="text-xs text-[#B8B1AA] block">F1-Score</span>
-                    <span className="text-xl font-bold font-mono text-[#FF2E2E] mt-1 block">98.87%</span>
-                  </div>
-                  <div className="clay-inset p-4">
-                    <span className="text-xs text-[#B8B1AA] block">ROC-AUC</span>
-                    <span className="text-xl font-bold font-mono text-[#FF2E2E] mt-1 block">99.54%</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2 text-xs font-mono text-[#B8B1AA]">
-                  <div className="flex justify-between py-1.5 border-b border-[#1f1616]">
-                    <span>Model Structure</span>
-                    <span className="text-white">Conv1D(32, 5) + MaxPool1D(2) + LSTM(32, 0.3)</span>
-                  </div>
-                  <div className="flex justify-between py-1.5 border-b border-[#1f1616]">
-                    <span>Trainable Parameters</span>
-                    <span className="text-[#FF2E2E]">9,601 Weights</span>
-                  </div>
-                  <div className="flex justify-between py-1.5 border-b border-[#1f1616]">
-                    <span>Precision / Recall</span>
-                    <span className="text-white">99.76% Precision / 98.00% Recall</span>
-                  </div>
-                  <div className="flex justify-between py-1.5">
-                    <span>Held-Out Test Results</span>
-                    <span className="text-emerald-400">831 TP / 88 TN (938 Samples)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Android Benchmark Card */}
-              <div className="clay-card p-8 space-y-6">
-                <div className="flex items-center justify-between pb-4 border-b border-[#8B1111]/30">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#191414] border border-[#8B1111]/40 text-[#FF2E2E] flex items-center justify-center shadow-[3px_3px_8px_#040404]">
-                      <DevicePhoneMobileIcon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-semibold text-white">Android APK Platform</h3>
-                      <span className="text-xs font-mono text-[#B8B1AA]">KronoDroid Dataset (142,112 Samples)</span>
-                    </div>
-                  </div>
-                  <span className="clay-pill text-xs font-mono px-3 py-1 text-[#FF2E2E]">
-                    487 Features
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div className="clay-inset p-4">
-                    <span className="text-xs text-[#B8B1AA] block">Accuracy</span>
-                    <span className="text-xl font-bold font-mono text-white mt-1 block">91.14%</span>
-                  </div>
-                  <div className="clay-inset p-4">
-                    <span className="text-xs text-[#B8B1AA] block">F1-Score</span>
-                    <span className="text-xl font-bold font-mono text-[#FF2E2E] mt-1 block">91.42%</span>
-                  </div>
-                  <div className="clay-inset p-4">
-                    <span className="text-xs text-[#B8B1AA] block">ROC-AUC</span>
-                    <span className="text-xl font-bold font-mono text-[#FF2E2E] mt-1 block">95.31%</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2 text-xs font-mono text-[#B8B1AA]">
-                  <div className="flex justify-between py-1.5 border-b border-[#1f1616]">
-                    <span>Model Structure</span>
-                    <span className="text-white">Conv1D(32, 5) + MaxPool1D(2) + LSTM(32, 0.3)</span>
-                  </div>
-                  <div className="flex justify-between py-1.5 border-b border-[#1f1616]">
-                    <span>Trainable Parameters</span>
-                    <span className="text-[#FF2E2E]">9,601 Weights</span>
-                  </div>
-                  <div className="flex justify-between py-1.5 border-b border-[#1f1616]">
-                    <span>Precision / Recall</span>
-                    <span className="text-white">92.48% Precision / 90.38% Recall</span>
-                  </div>
-                  <div className="flex justify-between py-1.5">
-                    <span>Held-Out Test Results</span>
-                    <span className="text-emerald-400">14,221 TP / 13,271 TN (30,163 Samples)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          
 
           {/* Architecture Capabilities */}
           <section id="architecture" className="max-w-7xl mx-auto px-6 lg:px-10 space-y-10">
