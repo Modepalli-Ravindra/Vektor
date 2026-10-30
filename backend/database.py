@@ -35,6 +35,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
+    full_name = Column(String, default="Researcher")
     email = Column(String, unique=True, index=True)
     password_hash = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -47,12 +48,25 @@ def hash_password(password: str) -> str:
 
 def init_db():
     Base.metadata.create_all(bind=engine)
+    
+    # Auto-migrate SQLite schema if full_name column missing
+    try:
+        with engine.connect() as conn:
+            cursor = conn.exec_driver_sql("PRAGMA table_info(users)")
+            cols = [row[1] for row in cursor.fetchall()]
+            if "full_name" not in cols:
+                conn.exec_driver_sql("ALTER TABLE users ADD COLUMN full_name TEXT DEFAULT 'Researcher'")
+                conn.commit()
+    except Exception as e:
+        print(f"User schema check note: {e}")
+
     # Seed default verified user if not exists
     db = SessionLocal()
     try:
         admin = db.query(User).filter(User.email == "admin@security.local").first()
         if not admin:
             db.add(User(
+                full_name="Lead Security Analyst",
                 email="admin@security.local",
                 password_hash=hash_password("Admin@1234"),
                 created_at=datetime.utcnow()
@@ -62,14 +76,16 @@ def init_db():
         db.close()
 
 
-def create_user(email: str, password: str):
+def create_user(email: str, password: str, full_name: str = ""):
     email = email.lower().strip()
+    full_name = full_name.strip() if full_name else email.split("@")[0]
     db = SessionLocal()
     try:
         existing = db.query(User).filter(User.email == email).first()
         if existing:
             return None, "An account with this email already exists."
         user = User(
+            full_name=full_name,
             email=email,
             password_hash=hash_password(password),
             created_at=datetime.utcnow()
@@ -77,7 +93,7 @@ def create_user(email: str, password: str):
         db.add(user)
         db.commit()
         db.refresh(user)
-        return {"id": user.id, "email": user.email}, None
+        return {"id": user.id, "email": user.email, "full_name": user.full_name}, None
     except Exception as e:
         db.rollback()
         return None, str(e)
@@ -94,7 +110,7 @@ def authenticate_user(email: str, password: str):
             return None, "No account found with this email address."
         if user.password_hash != hash_password(password):
             return None, "Incorrect password. Please verify and try again."
-        return {"id": user.id, "email": user.email}, None
+        return {"id": user.id, "email": user.email, "full_name": user.full_name or email.split("@")[0]}, None
     finally:
         db.close()
 

@@ -278,6 +278,12 @@ def reset_history():
     return {"message": "Scan history cleared successfully"}
 
 
+class RegisterPayload(BaseModel):
+    full_name: str = ""
+    email: str
+    password: str
+
+
 class AuthPayload(BaseModel):
     email: str
     password: str
@@ -289,8 +295,8 @@ class ForgotPasswordPayload(BaseModel):
 
 
 @app.post("/api/auth/register")
-def register_user(payload: AuthPayload):
-    user, error = create_user(payload.email, payload.password)
+def register_user(payload: RegisterPayload):
+    user, error = create_user(payload.email, payload.password, payload.full_name)
     if error:
         raise HTTPException(status_code=400, detail=error)
     return {"status": "success", "user": user}

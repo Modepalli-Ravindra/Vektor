@@ -38,6 +38,7 @@ export default function App() {
 
   // Authentication State
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'signup' | 'forgot'
+  const [authFullName, setAuthFullName] = useState('');
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authConfirmPassword, setAuthConfirmPassword] = useState('');
@@ -119,11 +120,19 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Strict route protection: Only authenticated users can access the application
+  useEffect(() => {
+    if (currentView === 'dashboard' && !user) {
+      setCurrentView('landing');
+    }
+  }, [currentView, user]);
+
   // Reset auth form state when opening/switching modal
   const openAuthWithMode = (mode) => {
     setAuthMode(mode);
     setAuthError(null);
     setAuthSuccess(null);
+    setAuthFullName('');
     setAuthPassword('');
     setAuthConfirmPassword('');
     setAuthModalOpen(true);
@@ -156,7 +165,7 @@ export default function App() {
 
       const authenticatedUser = {
         email: data.user.email,
-        name: data.user.email.split('@')[0],
+        name: data.user.full_name || data.user.email.split('@')[0],
         role: 'Verified Researcher',
       };
 
@@ -177,6 +186,12 @@ export default function App() {
     if (e) e.preventDefault();
     setAuthError(null);
     setAuthSuccess(null);
+
+    const fullName = authFullName.trim();
+    if (!fullName) {
+      setAuthError('Please enter your full name.');
+      return;
+    }
 
     const email = authEmail.trim();
     if (!email) {
@@ -199,7 +214,7 @@ export default function App() {
       const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: authPassword }),
+        body: JSON.stringify({ full_name: fullName, email, password: authPassword }),
       });
 
       const data = await res.json();
@@ -209,7 +224,7 @@ export default function App() {
 
       const authenticatedUser = {
         email: data.user.email,
-        name: data.user.email.split('@')[0],
+        name: data.user.full_name || fullName,
         role: 'Verified Researcher',
       };
 
@@ -219,6 +234,7 @@ export default function App() {
       setCurrentView('dashboard');
       setAuthPassword('');
       setAuthConfirmPassword('');
+      setAuthFullName('');
     } catch (err) {
       setAuthError(err.message || 'Registration error occurred.');
     } finally {
@@ -455,49 +471,60 @@ export default function App() {
 
           {/* Right Controls */}
           <div className="flex items-center gap-3">
-            {user ? (
+            {currentView === 'dashboard' && user ? (
               <div className="flex items-center gap-2.5">
-                {currentView === 'landing' ? (
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full clay-inset border border-[#8B1111]/30">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-mono text-white font-medium truncate max-w-[140px]">
+                    {user.name || user.email}
+                  </span>
+                </div>
+
+                <button
+                  onClick={() => setCurrentView('landing')}
+                  className="clay-btn-secondary text-xs py-1.5 px-3"
+                >
+                  <span>Home</span>
+                </button>
+
+                <button
+                  onClick={handleLogout}
+                  className="clay-btn-secondary text-xs py-1.5 px-3 text-rose-300 hover:text-white hover:border-[#FF2E2E] gap-1.5"
+                  title="Sign Out of Application"
+                >
+                  <ArrowRightOnRectangleIcon className="w-3.5 h-3.5 text-[#FF2E2E]" />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            ) : (
+              /* ON LANDING PAGE: NEVER SHOW SIGN OUT! */
+              <div className="flex items-center gap-2.5">
+                {user ? (
                   <button
                     onClick={() => setCurrentView('dashboard')}
-                    className="clay-btn-primary text-xs py-1.5 px-3.5"
+                    className="clay-btn-primary text-xs py-1.5 px-4"
                   >
                     <span>Dashboard</span>
                     <ArrowRightIcon className="w-3.5 h-3.5" />
                   </button>
                 ) : (
-                  <button
-                    onClick={() => setCurrentView('landing')}
-                    className="clay-btn-secondary text-xs py-1.5 px-3.5"
-                  >
-                    <span>Home</span>
-                  </button>
+                  <>
+                    <button
+                      onClick={() => openAuthWithMode('login')}
+                      className="clay-btn-secondary text-xs py-1.5 px-3.5"
+                    >
+                      <LockClosedIcon className="w-3.5 h-3.5 text-[#FF2E2E]" />
+                      <span>Sign In</span>
+                    </button>
+                    <button
+                      onClick={() => openAuthWithMode('signup')}
+                      className="clay-btn-primary text-xs py-1.5 px-3.5"
+                    >
+                      <UserPlusIcon className="w-3.5 h-3.5" />
+                      <span>Sign Up</span>
+                    </button>
+                  </>
                 )}
-
-                <button
-                  onClick={handleLogout}
-                  className="p-1.5 rounded-xl text-[#B8B1AA] hover:text-white clay-btn-secondary"
-                  title="Sign Out"
-                >
-                  <ArrowRightOnRectangleIcon className="w-4 h-4" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2.5">
-                <button
-                  onClick={() => openAuthWithMode('login')}
-                  className="clay-btn-secondary text-xs py-1.5 px-3.5"
-                >
-                  <LockClosedIcon className="w-3.5 h-3.5 text-[#FF2E2E]" />
-                  <span>Sign In</span>
-                </button>
-                <button
-                  onClick={() => openAuthWithMode('signup')}
-                  className="clay-btn-primary text-xs py-1.5 px-3.5"
-                >
-                  <UserPlusIcon className="w-3.5 h-3.5" />
-                  <span>Sign Up</span>
-                </button>
               </div>
             )}
           </div>
@@ -656,15 +683,23 @@ export default function App() {
           </section>
 
           {/* Benchmarks Section */}
-          <section id="benchmarks" className="max-w-7xl mx-auto px-6 lg:px-10 space-y-8">
-            <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-wider text-[#FF2E2E] font-semibold block">
-                Experimental Results
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <section id="benchmarks" className="max-w-7xl mx-auto px-6 lg:px-10 space-y-10">
+            <div className="text-center max-w-3xl mx-auto space-y-3.5 pb-2">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/50">
+                <span className="text-xs font-mono uppercase tracking-wider text-[#FF2E2E] font-semibold">
+                  Experimental Results
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                 Held-Out Benchmark Validation
               </h2>
-              <p className="text-sm text-[#B8B1AA] max-w-2xl">
+              {/* Center Border Accent Line */}
+              <div className="flex items-center justify-center gap-2 pt-1 pb-1">
+                <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#8B1111]" />
+                <div className="w-20 h-[2px] bg-[#FF2E2E] rounded-full shadow-[0_0_8px_#FF2E2E]" />
+                <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#8B1111]" />
+              </div>
+              <p className="text-sm sm:text-base text-[#B8B1AA] max-w-2xl mx-auto leading-relaxed">
                 Evaluated separately on held-out test splits. CNN layers extract structural patterns while LSTM layers capture sequence dependencies.
               </p>
             </div>
@@ -777,14 +812,22 @@ export default function App() {
           </section>
 
           {/* Architecture Capabilities */}
-          <section id="architecture" className="max-w-7xl mx-auto px-6 lg:px-10 space-y-8">
-            <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-wider text-[#FF2E2E] font-semibold block">
-                Core Capabilities
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <section id="architecture" className="max-w-7xl mx-auto px-6 lg:px-10 space-y-10">
+            <div className="text-center max-w-3xl mx-auto space-y-3.5 pb-2">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/50">
+                <span className="text-xs font-mono uppercase tracking-wider text-[#FF2E2E] font-semibold">
+                  Core Capabilities
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                 Built for Multi-Platform Detection
               </h2>
+              {/* Center Border Accent Line */}
+              <div className="flex items-center justify-center gap-2 pt-1">
+                <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#8B1111]" />
+                <div className="w-20 h-[2px] bg-[#FF2E2E] rounded-full shadow-[0_0_8px_#FF2E2E]" />
+                <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#8B1111]" />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -821,14 +864,22 @@ export default function App() {
           </section>
 
           {/* Workflow */}
-          <section id="workflow" className="max-w-7xl mx-auto px-6 lg:px-10 space-y-8">
-            <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-wider text-[#FF2E2E] font-semibold block">
-                Detection Process
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <section id="workflow" className="max-w-7xl mx-auto px-6 lg:px-10 space-y-10">
+            <div className="text-center max-w-3xl mx-auto space-y-3.5 pb-2">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full clay-inset border border-[#8B1111]/50">
+                <span className="text-xs font-mono uppercase tracking-wider text-[#FF2E2E] font-semibold">
+                  Detection Process
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                 How It Works
               </h2>
+              {/* Center Border Accent Line */}
+              <div className="flex items-center justify-center gap-2 pt-1">
+                <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#8B1111]" />
+                <div className="w-20 h-[2px] bg-[#FF2E2E] rounded-full shadow-[0_0_8px_#FF2E2E]" />
+                <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#8B1111]" />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -905,8 +956,11 @@ export default function App() {
                   Detection Console
                 </span>
               </div>
-              <p className="text-xs text-[#B8B1AA] mt-1">
-                Logged in as <span className="text-white font-medium">{user?.email}</span>
+              <p className="text-xs text-[#B8B1AA] mt-1 flex items-center gap-2">
+                <span>Researcher:</span>
+                <span className="text-white font-semibold">{user?.name || user?.email}</span>
+                <span className="text-[#8B1111]">&bull;</span>
+                <span className="text-[#B8B1AA] font-mono text-[11px]">{user?.email}</span>
               </p>
             </div>
 
@@ -915,7 +969,15 @@ export default function App() {
                 onClick={() => setCurrentView('landing')}
                 className="clay-btn-secondary text-xs py-2 px-4"
               >
-                <span>Home Page</span>
+                <span>Landing Page</span>
+              </button>
+              <button
+                onClick={handleLogout}
+                className="clay-btn-secondary text-xs py-2 px-4 text-rose-300 hover:text-white hover:border-[#FF2E2E] gap-1.5"
+                title="Sign Out of Vektor"
+              >
+                <ArrowRightOnRectangleIcon className="w-4 h-4 text-[#FF2E2E]" />
+                <span>Sign Out</span>
               </button>
             </div>
           </div>
@@ -1497,6 +1559,21 @@ export default function App() {
               }
               className="space-y-4 pt-1"
             >
+              {/* Full Name Field (Create Account Only) */}
+              {authMode === 'signup' && (
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-[#B8B1AA]">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Modepalli Ravindra"
+                    value={authFullName}
+                    onChange={(e) => setAuthFullName(e.target.value)}
+                    className="w-full px-3.5 py-2.5 clay-inset text-xs text-white placeholder-[#B8B1AA]/50 focus:outline-none focus:border-[#FF2E2E]/60"
+                  />
+                </div>
+              )}
+
               {/* Email Address */}
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-[#B8B1AA]">Email Address</label>
