@@ -3,3 +3,11 @@ output/
 test_malware.png
 .venv/
 dataset/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.DS_Store
+frontend/node_modules/
+frontend/dist/
