@@ -511,7 +511,7 @@ export default function App() {
                 <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full clay-inset border border-[#8B1111]/30">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="text-xs font-mono text-white font-medium truncate max-w-[150px]">
-                    {user?.name || user?.email}
+                    {user?.name || 'Analyst'}
                   </span>
                 </div>
 
@@ -812,23 +812,17 @@ export default function App() {
                   {dashboardTab === 'analytics' && 'Security Telemetry & System Analytics'}
                   {dashboardTab === 'models' && 'Deep Learning Architecture & Benchmarks'}
                 </h1>
-                <span className="clay-pill text-xs font-mono px-3 py-1 text-[#FF2E2E]">
-                  {dashboardTab === 'scanner' && 'Real-time Inference'}
-                  {dashboardTab === 'history' && `${history.length} SQLite Records`}
-                  {dashboardTab === 'analytics' && 'Active Metrics'}
-                  {dashboardTab === 'models' && 'Held-Out Validation'}
-                </span>
+                {dashboardTab !== 'scanner' && (
+                  <span className="clay-pill text-xs font-mono px-3 py-1 text-[#FF2E2E]">
+                    {dashboardTab === 'history' && `${history.length} SQLite Records`}
+                    {dashboardTab === 'analytics' && 'Active Metrics'}
+                    {dashboardTab === 'models' && 'Held-Out Validation'}
+                  </span>
+                )}
               </div>
-              <p className="text-xs text-[#B8B1AA] mt-1.5 flex flex-wrap items-center gap-2">
+              <p className="text-xs text-[#B8B1AA] mt-1.5 flex items-center gap-2">
                 <span>Researcher:</span>
-                <span className="text-white font-semibold">{user?.name || user?.email}</span>
-                <span className="text-[#8B1111]">&bull;</span>
-                <span className="text-[#B8B1AA] font-mono text-[11px]">{user?.email}</span>
-                <span className="text-[#8B1111] hidden sm:inline">&bull;</span>
-                <span className="hidden sm:inline-flex items-center gap-1.5 text-emerald-400 font-mono text-[11px]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Dual Engine Active
-                </span>
+                <span className="text-white font-semibold">{user?.name || 'Analyst'}</span>
               </p>
             </div>
 
@@ -1851,11 +1845,13 @@ export default function App() {
         </div>
       )}
 
-      {/* Clean Footer */}
-      <footer className="border-t border-[#8B1111]/30 bg-[#0c0909] py-8 px-6 text-center text-xs text-[#B8B1AA] font-mono mt-auto flex flex-col sm:flex-row items-center justify-center gap-3">
-        <VektorLogo className="w-6 h-6" />
-        <span>Vektor &bull; Cross-Platform Malware Detection System &bull; Windows (UCI staDyn) &amp; Android (KronoDroid)</span>
-      </footer>
+      {/* Clean Footer (Landing Page Only - Never in Dashboard) */}
+      {currentView === 'landing' && (
+        <footer className="border-t border-[#8B1111]/30 bg-[#0c0909] py-8 px-6 text-center text-xs text-[#B8B1AA] font-mono mt-auto flex flex-col sm:flex-row items-center justify-center gap-3">
+          <VektorLogo className="w-6 h-6" />
+          <span>Vektor &bull; Cross-Platform Malware Detection System &bull; Windows (UCI staDyn) &amp; Android (KronoDroid)</span>
+        </footer>
+      )}
     </div>
   );
 }
