@@ -144,46 +144,126 @@ HCLCP/
 
 ---
 
-## Getting Started
+## Getting Started & Installation on Another System
 
-### Prerequisites
-- **Python**: Version 3.10 or higher
-- **Node.js**: Version 18.0 or higher
-- **Git**
+Follow this step-by-step guide to clone, install, and run Vektor on another computer (Windows, Linux, or macOS).
 
-### Installation
+### System Prerequisites & Supported Versions
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Modepalli-Ravindra/Vektor.git
-   cd Vektor
-   ```
+| Dependency | Minimum Version | Recommended / Tested Version | Verification Command | Download Link |
+|:---|:---:|:---:|:---:|:---|
+| **Git** | `2.30.0+` | `2.40.0+` | `git --version` | [git-scm.com](https://git-scm.com/) |
+| **Python** | `3.10.0+` | `3.10` – `3.13` (Tested on `3.13.15`) | `python --version` | [python.org](https://www.python.org/downloads/) |
+| **Node.js** | `18.0.0+` LTS | `20.x` or `22.x` (Tested on `22.23.2`) | `node --version` | [nodejs.org](https://nodejs.org/) |
+| **npm** | `9.0.0+` | `10.9.0+` | `npm --version` | Bundled with Node.js |
 
-2. **Set up and start the Backend:**
-   ```bash
-   # Option A: Using the Windows batch script
-   run_backend.bat
+> [!IMPORTANT]
+> When installing Python on Windows, ensure you check the box **"Add Python to PATH"** in the installer.
 
-   # Option B: Manual setup
-   cd backend
-   python -m venv venv
-   source venv/Scripts/activate     # Windows
-   pip install -r requirements.txt
-   python -m uvicorn main:app --host 127.0.0.1 --port 8000 --reload
-   ```
-   *The FastAPI server starts at `http://127.0.0.1:8000` (API documentation at `/docs`).*
+---
 
-3. **Set up and start the Frontend:**
-   ```bash
-   # Option A: Using the Windows batch script
-   run_frontend.bat
+### Step-by-Step Installation Guide
 
-   # Option B: Manual setup
-   cd frontend
-   npm install
-   npm run dev
-   ```
-   *The React console opens at `http://127.0.0.1:5173`.*
+#### Step 1: Clone the Repository via Git
+Open your terminal (PowerShell, Command Prompt, or Bash) and clone the repository:
+```bash
+git clone https://github.com/Modepalli-Ravindra/Vektor.git
+cd Vektor
+```
+
+#### Step 2: Set Up Backend (Python Virtual Environment & Dependencies)
+Create an isolated Python virtual environment and install all required machine learning and API libraries:
+
+**On Windows (PowerShell / Command Prompt):**
+```bash
+# 1. Create a Python virtual environment
+python -m venv venv
+
+# 2. Activate the virtual environment
+venv\Scripts\activate
+
+# 3. Upgrade pip
+python -m pip install --upgrade pip
+
+# 4. Install backend dependencies (FastAPI, TensorFlow, Keras, pefile, etc.)
+pip install -r backend/requirements.txt
+```
+
+**On Linux / macOS:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r backend/requirements.txt
+```
+
+#### Step 3: Set Up Frontend (Node.js & Vite Dependencies)
+Install the React dependencies:
+```bash
+cd frontend
+npm install
+cd ..
+```
+
+#### Step 4: Generate Demo Test Files (Optional)
+Generate clean Windows `.exe`, Android `.apk`, and Byte Matrix simulation files for immediate testing:
+```bash
+python create_sample_files.py
+```
+*(This generates 5 safe demonstration files into `Sample_Test_Files/` ready to upload to the scanner).*
+
+---
+
+### Running the Application
+
+You will run the **Backend API** and **Frontend UI** in two separate terminal windows.
+
+#### Option A: Quick One-Click Launchers (Windows)
+- Double-click `run_backend.bat` (Starts FastAPI server on `http://127.0.0.1:8000`)
+- Double-click `run_frontend.bat` (Starts React Vite server on `http://127.0.0.1:5173`)
+
+#### Option B: Manual Command-Line Launch
+
+**Terminal 1 — Start Backend Server:**
+```bash
+# Ensure your virtual environment is active
+venv\Scripts\activate      # Windows
+# or: source venv/bin/activate  # Linux/macOS
+
+cd backend
+python -m uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+```
+*Backend will start on `http://127.0.0.1:8000` with interactive API docs at `http://127.0.0.1:8000/docs`.*
+
+**Terminal 2 — Start Frontend Server:**
+```bash
+cd frontend
+npm run dev
+```
+*Frontend will launch on `http://127.0.0.1:5173`.*
+
+---
+
+### Accessing & Using the System
+
+1. Open your browser and navigate to: **`http://127.0.0.1:5173`**
+2. **Sign Up / Sign In**:
+   - Click **Sign Up** to create an analyst account (enter Full Name, Email, and a strong password).
+   - Or click **Sign In** if you already created an account.
+3. **Scan a File**:
+   - Navigate to the **Scanner** tab.
+   - Choose your platform: **Windows PE (244 Features)**, **Android APK (487 Features)**, or **Visual Byte Matrix**.
+   - Drag & drop or select a file from `Sample_Test_Files/` (e.g. `1_Clean_hostname.exe` or `3_Suspicious_Trojan_Spyware.apk`).
+   - Adjust the **Classification Threshold Slider** (default: `0.50`).
+   - Click **Scan & Classify Binary**.
+4. **Inspect Results with Zero Scroll**:
+   - Watch the animated **Cyber Scanning Loader** with backdrop blur and live 5-stage neural pipeline tracking.
+   - View the Verdict on the right card: toggle between **Forensic Overview** and **SHAP Explainability** right on the card without vertical page scrolling.
+5. **Explore Multi-Page Analytics**:
+   - Check **Scan History** for persistent SQLite audit trails.
+   - Check **Analytics** for live telemetry and threat distribution bars.
+   - Check **Model Specs** for model architecture and validation confusion matrices.
+6. Click **Sign Out** in the top navbar when finished.
 
 ---
 
