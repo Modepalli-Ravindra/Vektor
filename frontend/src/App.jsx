@@ -617,13 +617,6 @@ export default function App() {
               {/* Full-width Cyber Perspective Grid across 100% screen */}
               <div className="absolute inset-0 cyber-grid [mask-image:radial-gradient(ellipse_100%_80%_at_50%_40%,#000_70%,transparent_100%)] opacity-35 w-full h-full" />
 
-              {/* Full-bleed Cyber Graphic Texture spanning left and right */}
-              <img
-                src="/hero-cyber-bg.png"
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-screen filter saturate-150 pointer-events-none"
-              />
-
               {/* Deep Red Volumetric Atmospheric Glows covering left, center & right */}
               <div className="absolute -top-24 left-1/10 w-[600px] sm:w-[900px] h-[500px] sm:h-[700px] bg-[#8B1111]/30 rounded-full blur-[160px] pointer-events-none" />
               <div className="absolute top-10 right-1/10 w-[450px] sm:w-[650px] h-[450px] sm:h-[650px] bg-[#FF2E2E]/20 rounded-full blur-[130px] pointer-events-none" />
@@ -697,17 +690,22 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* RIGHT COLUMN: Clean, Grounded Enterprise Vektor Shield Emblem */}
+                {/* RIGHT COLUMN: Animated Enterprise Vektor Shield Emblem */}
                 <div className="lg:col-span-5 flex items-center justify-center relative">
-                  <div className="relative w-[280px] sm:w-[360px] aspect-square flex items-center justify-center">
-                    {/* Subtle ambient red atmospheric glow */}
-                    <div className="absolute inset-4 rounded-full bg-[#8B1111]/30 blur-3xl pointer-events-none" />
+                  <div className="relative w-[280px] sm:w-[380px] aspect-square flex items-center justify-center select-none">
+                    {/* Dynamic pulsing red volumetric atmospheric glow */}
+                    <div className="absolute inset-2 sm:inset-4 rounded-full bg-[#FF2E2E]/25 blur-3xl pointer-events-none animate-glow-pulse" />
+                    <div className="absolute inset-8 rounded-full bg-[#8B1111]/40 blur-2xl pointer-events-none" />
 
-                    {/* High-Res Transparent Vektor Shield Emblem */}
+                    {/* Concentric Cyber Orbit Rings */}
+                    <div className="absolute w-[300px] sm:w-[380px] h-[300px] sm:h-[380px] rounded-full border border-dashed border-[#FF2E2E]/20 pointer-events-none animate-orbit-spin" />
+                    <div className="absolute w-[250px] sm:w-[320px] h-[250px] sm:h-[320px] rounded-full border border-[#8B1111]/30 pointer-events-none" />
+
+                    {/* High-Res Transparent Vektor Shield Emblem with Smooth Floating Animation */}
                     <img
                       src="/hero-bg.png"
                       alt="Vektor Shield Emblem"
-                      className="relative z-10 w-[260px] sm:w-[320px] aspect-square object-contain filter drop-shadow-[0_16px_40px_rgba(255,46,46,0.5)] select-none"
+                      className="relative z-10 w-[260px] sm:w-[320px] aspect-square object-contain select-none animate-hero-logo cursor-pointer hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                 </div>

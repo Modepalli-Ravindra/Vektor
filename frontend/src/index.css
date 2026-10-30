@@ -194,4 +194,46 @@ input[type="range"]::-webkit-slider-thumb:hover {
   background: radial-gradient(circle at 50% 45%, rgba(255, 46, 46, 0.22) 0%, rgba(139, 17, 17, 0.14) 40%, transparent 72%);
 }
 
-/* Clean UI - No AI gimmick animations */
+/* ──────────────── HERO EMBLEM CYBER ANIMATIONS ──────────────── */
+@keyframes heroLogoFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    filter: drop-shadow(0 16px 36px rgba(255, 46, 46, 0.45));
+  }
+  50% {
+    transform: translateY(-12px) rotate(0.8deg);
+    filter: drop-shadow(0 26px 54px rgba(255, 46, 46, 0.85));
+  }
+}
+
+@keyframes heroGlowPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.18);
+  }
+}
+
+@keyframes heroOrbitSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-hero-logo {
+  animation: heroLogoFloat 4s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: heroGlowPulse 3s ease-in-out infinite;
+}
+
+.animate-orbit-spin {
+  animation: heroOrbitSpin 20s linear infinite;
+}
