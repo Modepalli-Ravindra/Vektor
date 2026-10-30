@@ -424,7 +424,7 @@ export default function App() {
           <div
             onClick={() => {
               if (currentView === 'landing') {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.scrollTo(0, 0);
               }
             }}
             className="flex items-center gap-2.5 cursor-pointer select-none"
@@ -550,7 +550,7 @@ export default function App() {
 
       {/* ──────────────── VIEW 1: LANDING PAGE ──────────────── */}
       {currentView === 'landing' && (
-        <div className="flex-1 space-y-28 pb-28">
+        <div className="flex-1 space-y-16 pb-16">
           {/* Hero Section */}
           <section id="overview" className="relative isolate max-w-7xl mx-auto px-6 lg:px-10 pt-16 sm:pt-20 pb-16 overflow-hidden rounded-3xl">
             {/* ──────────────── HERO BACKGROUND: AMBIENT GLOWS & CYBER GRID ──────────────── */}
@@ -627,45 +627,18 @@ export default function App() {
                 </div>
               </div>
 
-              {/* RIGHT COLUMN: 3D Animated Logo Stage */}
+              {/* RIGHT COLUMN: Clean, Grounded Enterprise Vektor Shield Emblem */}
               <div className="lg:col-span-5 flex items-center justify-center relative">
-                <div className="relative w-[320px] sm:w-[420px] lg:w-[450px] aspect-square flex items-center justify-center">
-                  
-                  {/* Concentric Radar Scan Circle Outer with Blips */}
-                  <div className="absolute inset-0 rounded-full border border-[#FF2E2E]/25 animate-spin-slow flex items-center justify-center pointer-events-none">
-                    <div className="absolute top-0 w-3 h-3 rounded-full bg-[#FF2E2E] shadow-[0_0_14px_#FF2E2E]" />
-                    <div className="absolute bottom-0 w-3 h-3 rounded-full bg-[#8B1111]" />
-                    <div className="absolute left-0 w-3 h-3 rounded-full bg-[#8B1111]" />
-                    <div className="absolute right-0 w-3 h-3 rounded-full bg-[#FF2E2E] shadow-[0_0_14px_#FF2E2E]" />
-                  </div>
+                <div className="relative w-[280px] sm:w-[360px] aspect-square flex items-center justify-center">
+                  {/* Subtle ambient red atmospheric glow */}
+                  <div className="absolute inset-4 rounded-full bg-[#8B1111]/30 blur-3xl pointer-events-none" />
 
-                  {/* Inner Dashed Reverse Rotating Ring */}
-                  <div className="absolute inset-8 sm:inset-10 rounded-full border border-dashed border-[#8B1111]/45 animate-spin-reverse pointer-events-none" />
-                  
-                  {/* Radial Red Aura */}
-                  <div className="absolute inset-16 sm:inset-20 rounded-full bg-gradient-to-tr from-[#8B1111]/25 via-[#FF2E2E]/15 to-transparent blur-lg pointer-events-none" />
-
-                  {/* High-Res Transparent Vektor Shield Emblem (Background Cleanly Removed) */}
+                  {/* High-Res Transparent Vektor Shield Emblem */}
                   <img
                     src="/hero-bg.png"
                     alt="Vektor Shield Emblem"
-                    className="relative z-10 w-[270px] sm:w-[340px] lg:w-[370px] aspect-square object-contain filter drop-shadow-[0_0_50px_rgba(255,46,46,0.8)] animate-pulse-glow select-none"
+                    className="relative z-10 w-[260px] sm:w-[320px] aspect-square object-contain filter drop-shadow-[0_16px_40px_rgba(255,46,46,0.5)] select-none"
                   />
-
-                  {/* Floating Status Badges */}
-                  <div className="absolute -top-1 right-2 sm:right-6 z-20 animate-float-1 pointer-events-none">
-                    <div className="clay-card py-1.5 px-3 border border-[#FF2E2E]/40 flex items-center gap-2 text-xs font-mono shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
-                      <span className="text-white font-semibold">Active Defense</span>
-                    </div>
-                  </div>
-
-                  <div className="absolute -bottom-1 left-2 sm:left-6 z-20 animate-float-2 pointer-events-none">
-                    <div className="clay-card py-1.5 px-3 border border-[#8B1111]/60 flex items-center gap-2 text-xs font-mono shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-                      <span className="text-[#FF2E2E] font-bold">99.54%</span>
-                      <span className="text-[#B8B1AA]">ROC-AUC</span>
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -771,34 +744,34 @@ export default function App() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="clay-card p-6 space-y-2">
-                <span className="text-xs font-mono text-[#FF2E2E] font-bold block">01 / PARSING</span>
+                <span className="text-xs font-mono text-[#FF2E2E] font-semibold block">Step 1</span>
                 <h4 className="text-sm font-semibold text-white">Feature Extraction</h4>
                 <p className="text-xs text-[#B8B1AA] leading-relaxed">
-                  Reads PE structural tables for Windows or manifest entries and DEX calls for Android packages.
+                  Parses PE structural tables for Windows executables, and manifest permissions with DEX API traces for Android packages.
                 </p>
               </div>
 
               <div className="clay-card p-6 space-y-2">
-                <span className="text-xs font-mono text-[#FF2E2E] font-bold block">02 / CONVOLUTION</span>
-                <h4 className="text-sm font-semibold text-white">Pattern Extraction</h4>
+                <span className="text-xs font-mono text-[#FF2E2E] font-semibold block">Step 2</span>
+                <h4 className="text-sm font-semibold text-white">Spatial Convolution</h4>
                 <p className="text-xs text-[#B8B1AA] leading-relaxed">
-                  Conv1D filters identify recurring feature combinations and structural signatures.
+                  32 Conv1D kernels extract recurring structural patterns and localized opcode clusters across the feature vector.
                 </p>
               </div>
 
               <div className="clay-card p-6 space-y-2">
-                <span className="text-xs font-mono text-[#FF2E2E] font-bold block">03 / RECURRENT MEMORY</span>
-                <h4 className="text-sm font-semibold text-white">Sequence Analysis</h4>
+                <span className="text-xs font-mono text-[#FF2E2E] font-semibold block">Step 3</span>
+                <h4 className="text-sm font-semibold text-white">Temporal Recurrence</h4>
                 <p className="text-xs text-[#B8B1AA] leading-relaxed">
-                  LSTM unit tracks sequential relationships between calls and permissions over long ranges.
+                  32 LSTM memory cells retain sequential dependencies across long-range system call executions.
                 </p>
               </div>
 
               <div className="clay-card p-6 space-y-2">
-                <span className="text-xs font-mono text-[#FF2E2E] font-bold block">04 / OUTPUT</span>
-                <h4 className="text-sm font-semibold text-white">Classification</h4>
+                <span className="text-xs font-mono text-[#FF2E2E] font-semibold block">Step 4</span>
+                <h4 className="text-sm font-semibold text-white">Threshold Classification</h4>
                 <p className="text-xs text-[#B8B1AA] leading-relaxed">
-                  Sigmoid layer produces a probability score evaluated against the configured threshold.
+                  Calibrated sigmoid layer calculates the final malicious probability against the analyst-configured sensitivity threshold.
                 </p>
               </div>
             </div>
@@ -810,7 +783,7 @@ export default function App() {
               <div className="space-y-1">
                 <h3 className="text-xl font-bold text-white">Ready to test a sample?</h3>
                 <p className="text-sm text-[#B8B1AA]">
-                  Open the scanner to evaluate Windows executables, Android packages, or pre-validated test samples.
+                  Open the scanner to evaluate Windows executables, Android packages, or visual byte matrices.
                 </p>
               </div>
               <button
@@ -827,7 +800,7 @@ export default function App() {
 
       {/* ──────────────── VIEW 2: SCANNER DASHBOARD ──────────────── */}
       {currentView === 'dashboard' && (
-        <main className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-12 pt-6 sm:pt-8 pb-20 space-y-8 flex-1">
+        <main className="w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-10 py-5 space-y-5 flex-1">
           {/* Top Bar with Dynamic Title & Status */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#8B1111]/30">
             <div>
@@ -964,7 +937,7 @@ export default function App() {
                         onDragOver={handleDrag}
                         onDrop={handleDrop}
                         onClick={() => fileInputRef.current?.click()}
-                        className={`clay-inset p-10 sm:p-14 text-center cursor-pointer transition-all border-2 border-dashed ${
+                        className={`clay-inset p-6 sm:p-8 text-center cursor-pointer transition-all border-2 border-dashed ${
                           dragActive
                             ? 'border-[#FF2E2E] bg-[#1a1212]'
                             : selectedFile
@@ -1202,28 +1175,13 @@ export default function App() {
                         Vektor dual-platform neural detection engine is loaded and awaiting file ingestion. Load a Windows executable (.exe/.dll) or Android package (.apk) on the left panel to begin forensic feature extraction and deep sequence classification.
                       </p>
 
-                      <div className="mt-6 space-y-3">
+                      <div className="mt-5 p-4 rounded-xl clay-inset space-y-2.5 text-xs text-[#B8B1AA] leading-relaxed">
                         <span className="text-xs font-mono text-[#FF2E2E] uppercase font-semibold block">
-                          Deep Neural Pipeline Steps
+                          Inference Pipeline Overview
                         </span>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
-                          <div className="clay-inset p-3.5 space-y-1">
-                            <span className="text-white font-semibold block">1. File Ingestion</span>
-                            <span className="text-[#B8B1AA] block text-[11px]">Computes SHA-256 and parses PE/DEX header structures.</span>
-                          </div>
-                          <div className="clay-inset p-3.5 space-y-1">
-                            <span className="text-white font-semibold block">2. Feature Extraction</span>
-                            <span className="text-[#B8B1AA] block text-[11px]">Extracts 244 PE attributes or 487 KronoDroid permissions.</span>
-                          </div>
-                          <div className="clay-inset p-3.5 space-y-1">
-                            <span className="text-white font-semibold block">3. Conv1D Spatial Filter</span>
-                            <span className="text-[#B8B1AA] block text-[11px]">32 spatial kernels identify local opcode clustering.</span>
-                          </div>
-                          <div className="clay-inset p-3.5 space-y-1">
-                            <span className="text-white font-semibold block">4. LSTM Temporal Memory</span>
-                            <span className="text-[#B8B1AA] block text-[11px]">32 memory cells evaluate long-range sequence dependencies.</span>
-                          </div>
-                        </div>
+                        <p>
+                          The system ingests binary files, computes SHA-256 cryptographic signatures, and extracts structured feature vectors (244 attributes for Windows PE or 487 for Android APK). Next, 32 spatial Conv1D kernels identify localized opcode clustering and structural patterns, followed by 32 recurrent LSTM memory units that evaluate temporal call sequences across long execution ranges. The final sigmoid layer computes a calibrated malware probability against the analyst-configured threshold.
+                        </p>
                       </div>
                     </div>
 
@@ -1314,7 +1272,7 @@ export default function App() {
               </div>
 
               {/* History Table */}
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto max-h-[60vh] overflow-y-auto">
                 <table className="w-full text-left text-xs font-mono">
                   <thead>
                     <tr className="text-[#B8B1AA] border-b border-[#8B1111]/30">
