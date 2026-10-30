@@ -22,7 +22,9 @@ import {
   CheckCircleIcon,
   KeyIcon,
   UserPlusIcon,
-  UserIcon
+  UserIcon,
+  EyeIcon,
+  EyeSlashIcon
 } from '@heroicons/react/24/outline';
 import VektorLogo from './components/VektorLogo';
 
@@ -43,6 +45,8 @@ export default function App() {
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authConfirmPassword, setAuthConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [authError, setAuthError] = useState(null);
   const [authSuccess, setAuthSuccess] = useState(null);
   const [authLoading, setAuthLoading] = useState(false);
@@ -136,6 +140,8 @@ export default function App() {
     setAuthFullName('');
     setAuthPassword('');
     setAuthConfirmPassword('');
+    setShowPassword(false);
+    setShowConfirmPassword(false);
     setAuthModalOpen(true);
   };
 
@@ -1607,28 +1613,56 @@ export default function App() {
                     </button>
                   )}
                 </div>
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••••••"
-                  value={authPassword}
-                  onChange={(e) => setAuthPassword(e.target.value)}
-                  className="w-full px-3.5 py-2.5 clay-inset text-xs text-white placeholder-[#B8B1AA]/50 focus:outline-none focus:border-[#FF2E2E]/60"
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    placeholder="••••••••••••"
+                    value={authPassword}
+                    onChange={(e) => setAuthPassword(e.target.value)}
+                    className="w-full pl-3.5 pr-10 py-2.5 clay-inset text-xs text-white placeholder-[#B8B1AA]/50 focus:outline-none focus:border-[#FF2E2E]/60 border border-[#8B1111]/30"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#B8B1AA] hover:text-[#FF2E2E] p-1 transition-colors"
+                    title={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="w-4 h-4" />
+                    ) : (
+                      <EyeIcon className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
               </div>
 
               {/* Confirm Password (For Sign Up & Forgot Password) */}
               {(authMode === 'signup' || authMode === 'forgot') && (
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-[#B8B1AA]">Confirm Password</label>
-                  <input
-                    type="password"
-                    required
-                    placeholder="••••••••••••"
-                    value={authConfirmPassword}
-                    onChange={(e) => setAuthConfirmPassword(e.target.value)}
-                    className="w-full px-3.5 py-2.5 clay-inset text-xs text-white placeholder-[#B8B1AA]/50 focus:outline-none focus:border-[#FF2E2E]/60"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      required
+                      placeholder="••••••••••••"
+                      value={authConfirmPassword}
+                      onChange={(e) => setAuthConfirmPassword(e.target.value)}
+                      className="w-full pl-3.5 pr-10 py-2.5 clay-inset text-xs text-white placeholder-[#B8B1AA]/50 focus:outline-none focus:border-[#FF2E2E]/60 border border-[#8B1111]/30"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#B8B1AA] hover:text-[#FF2E2E] p-1 transition-colors"
+                      title={showConfirmPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeSlashIcon className="w-4 h-4" />
+                      ) : (
+                        <EyeIcon className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               )}
 
