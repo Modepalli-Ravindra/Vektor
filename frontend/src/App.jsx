@@ -820,10 +820,6 @@ export default function App() {
                   </span>
                 )}
               </div>
-              <p className="text-xs text-[#B8B1AA] mt-1.5 flex items-center gap-2">
-                <span>Researcher:</span>
-                <span className="text-white font-semibold">{user?.name || 'Analyst'}</span>
-              </p>
             </div>
 
             <div className="flex items-center gap-3">
